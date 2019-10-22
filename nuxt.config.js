@@ -30,6 +30,8 @@ export default {
   ** Plugins to load before mounting the App
   */
     plugins: [
+        '~/plugins/noProdTip',
+        '~/plugins/axios',
     ],
     /*
   ** Nuxt.js dev-modules

@@ -10,6 +10,8 @@ module.exports = {
   extends: [
     '@nuxtjs',
     'plugin:nuxt/recommended'
+    // "plugin:vue/recommended",
+    // "@vue/standard",
   ],
   rules: {
       'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
