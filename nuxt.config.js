@@ -2,9 +2,12 @@ import colors from 'vuetify/es5/util/colors'
 
 export default {
     mode: 'universal',
+    env: { // environement variables
+        baseUrl: process.env.baseUrl || 'https://my.firebaseio.com',
+    },
     /*
-  ** Headers of the page
-  */
+    ** Headers of the page
+    */
     head: {
         titleTemplate: '%s - ' + process.env.npm_package_name,
         title: process.env.npm_package_name || '',
@@ -18,38 +21,38 @@ export default {
         ],
     },
     /*
-  ** Customize the progress-bar color
-  */
-    loading: { color: '#fff' },
+    ** Customize the progress-bar color
+    */
+    loading: { color: '#b81e1e' },
     /*
-  ** Global CSS
-  */
+    ** Global CSS
+    */
     css: [
     ],
     /*
-  ** Plugins to load before mounting the App
-  */
+    ** Plugins to load before mounting the App
+    */
     plugins: [
         '~/plugins/noProdTip',
         '~/plugins/axios',
     ],
     /*
-  ** Nuxt.js dev-modules
-  */
+    ** Nuxt.js dev-modules
+    */
     buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
         '@nuxtjs/eslint-module',
         '@nuxtjs/vuetify',
     ],
     /*
-  ** Nuxt.js modules
-  */
+    ** Nuxt.js modules
+    */
     modules: [
     ],
     /*
-  ** vuetify module configuration
-  ** https://github.com/nuxt-community/vuetify-module
-  */
+    ** vuetify module configuration
+    ** https://github.com/nuxt-community/vuetify-module
+    */
     vuetify: {
         customVariables: ['~/assets/variables.scss'],
         theme: {
@@ -68,8 +71,8 @@ export default {
         },
     },
     /*
-  ** Build configuration
-  */
+    ** Build configuration
+    */
     build: {
     /*
     ** You can extend webpack config here

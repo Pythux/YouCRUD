@@ -3,7 +3,7 @@ import Axios from 'axios'
 
 const axiosAuth = Axios.create(
     {
-        baseURL: 'http://localhost:8000/api',
+        baseURL: process.env.baseUrl,
         headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
