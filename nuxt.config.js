@@ -1,3 +1,4 @@
+import fs from 'fs'
 import colors from 'vuetify/es5/util/colors'
 
 export default {
@@ -32,13 +33,9 @@ export default {
     css: [
     ],
     /*
-    ** Plugins to load before mounting the App
+    ** Plugins to load before mounting the App: all files in directorie "plugins"
     */
-    plugins: [
-        'noProdTip',
-        'axios',
-        'featherIcons',
-    ].map(plug => `~/plugins/${plug}`),
+    plugins: fs.readdirSync('./plugins').map(plug => `~/plugins/${plug}`),
     /*
     ** Nuxt.js dev-modules
     */
