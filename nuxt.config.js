@@ -1,7 +1,7 @@
 import colors from 'vuetify/es5/util/colors'
 
 export default {
-    mode: 'universal',
+    mode: 'spa',
     env: { // environement variables
         baseUrl: process.env.baseUrl || 'https://my.firebaseio.com',
     },
