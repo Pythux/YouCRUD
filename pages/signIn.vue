@@ -1,44 +1,13 @@
-
 <template>
-  <login-sign-in
-    action="signIn"
-    login-label="Email"
-    other-action-path="/login"
-    :login-rules="emailRules"
-    @credential="signIn"
-  />
+  <LoginSignInHTTP action="signIn" :action-path="['/login', '/signIn']" />
 </template>
 
 <script>
-import LoginSignIn from '@/components/LoginSignIn'
+import LoginSignInHTTP from '@/components/LoginSignInHTTP'
+
 export default {
     components: {
-        LoginSignIn,
-    },
-    data() {
-        return {
-            emailRules: [value => !!value || 'Required.'],
-        }
-    },
-    methods: {
-        signIn(credential) {
-            this.$http.post(`${process.env.identitytoolkit}/accounts:signUp?key=${process.env.API_KEY}`,
-                {
-                    email: credential.login,
-                    password: credential.password,
-                    returnSecureToken: true,
-                }
-            ).then(response => {
-                console.log(response)
-                const d = response.data
-                this.$store.login.dispatch('login',
-                    { idToken: d.idToken, expiresIn: d.expiresIn, refreshToken: d.refreshToken })
-            }).catch(error => {
-                const email = credential.login
-                const errorMsg = error.response.data.error.message
-                this.emailRules.push(v => v !== email || errorMsg)
-            })
-        },
+        LoginSignInHTTP,
     },
 }
 </script>

@@ -52,7 +52,7 @@ export default {
             required: true,
             default: 'signIn',
             validator(value) { // this function is not run on --production mode
-                const valideVal = ['signIn', 'login']
+                const valideVal = ['login', 'signIn']
                 if (!valideVal.includes(value)) {
                     // eslint-disable-next-line
                     console.error(`"${value}" is not a valide action`)
