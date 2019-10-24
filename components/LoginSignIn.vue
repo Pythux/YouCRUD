@@ -73,16 +73,6 @@ export default {
             required: false,
             default: 'Login',
         },
-        loginRules: {
-            type: Array,
-            required: false,
-            default: () => [value => !!value || 'Required.'],
-        },
-        passwordRules: {
-            type: Array,
-            required: false,
-            default: () => [v => !!v || 'Required.'],
-        },
     },
     data() {
         return {
@@ -90,6 +80,9 @@ export default {
             txt: { 'signIn': 'Sign In', 'login': 'Login' },
             login: '',
             password: '',
+            validTouch: true,
+            loginRules: [value => this.validTouch || !!value || 'Required.'],
+            passwordRules: [value => this.validTouch || !!value || 'Required.'],
         }
     },
     computed: {
@@ -117,6 +110,7 @@ export default {
     },
     methods: {
         submit() {
+            this.validTouch = false
             if (this.$refs.form.validate()) {
                 const credential = { login: this.login, password: this.password }
                 this.$emit('credential', credential)
