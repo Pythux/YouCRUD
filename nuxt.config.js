@@ -4,6 +4,8 @@ export default {
     mode: 'spa',
     env: { // environement variables
         baseUrl: process.env.baseUrl || 'https://my.firebaseio.com',
+        API_KEY: 'AIzaSyDgqSTVHy0xyFmYDwA9eczZbu-Fw2u9KKc',
+        identitytoolkit: 'https://identitytoolkit.googleapis.com/v1',
     },
     /*
     ** Headers of the page
@@ -33,9 +35,10 @@ export default {
     ** Plugins to load before mounting the App
     */
     plugins: [
-        '~/plugins/noProdTip',
-        '~/plugins/axios',
-    ],
+        'noProdTip',
+        'axios',
+        'featherIcons',
+    ].map(plug => `~/plugins/${plug}`),
     /*
     ** Nuxt.js dev-modules
     */
