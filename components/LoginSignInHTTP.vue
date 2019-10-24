@@ -18,7 +18,7 @@ export default {
     props: {
         action: {
             type: String,
-            required: true,
+            required: false,
             default: 'login',
             validator(value) { // this function is not run on --production mode
                 const valideVal = ['login', 'signIn']

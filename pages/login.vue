@@ -1,5 +1,5 @@
 <template>
-  <LoginSignInHTTP action="login" :action-path="['/login', '/signIn']" />
+  <LoginSignInHTTP :action="$route.query.action" :action-path="['/login?action=login', '/login?action=signIn']" />
 </template>
 
 <script>
@@ -9,5 +9,6 @@ export default {
     components: {
         LoginSignInHTTP,
     },
+    // watchQuery: true,
 }
 </script>
