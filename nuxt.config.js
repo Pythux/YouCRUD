@@ -4,9 +4,10 @@ import colors from 'vuetify/es5/util/colors'
 export default {
     mode: 'spa',
     env: { // environement variables
-        baseUrl: process.env.baseUrl || 'https://my.firebaseio.com',
         API_KEY: 'AIzaSyDgqSTVHy0xyFmYDwA9eczZbu-Fw2u9KKc',
-        identitytoolkit: 'https://identitytoolkit.googleapis.com/v1',
+        baseUrl: process.env.baseUrl || 'https://my.firebaseio.com',
+        identitytoolkit_URL: 'https://identitytoolkit.googleapis.com/v1',
+        secureToken_URL: 'https://securetoken.googleapis.com/v1/token',
     },
     /*
     ** Headers of the page

@@ -9,6 +9,5 @@ export default {
     components: {
         LoginSignInHTTP,
     },
-    // watchQuery: true,
 }
 </script>

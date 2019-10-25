@@ -56,17 +56,17 @@ export default {
             if (this.action === 'signIn') {
                 request = 'signUp' // signIn
             }
-            this.$http.post(`${process.env.identitytoolkit}/accounts:${request}?key=${process.env.API_KEY}`,
+            this.$http.post(`${process.env.identitytoolkit_URL}/accounts:${request}?key=${process.env.API_KEY}`,
                 {
                     email: credential.login,
                     password: credential.password,
                     returnSecureToken: true,
                 }
             ).then(response => {
-                console.log(response)
                 const d = response.data
-                this.$store.login.dispatch('login',
+                this.$store.dispatch('auth/login',
                     { idToken: d.idToken, expiresIn: d.expiresIn, refreshToken: d.refreshToken })
+                this.$router.push('/')
             }).catch(error => {
                 this.showErrorMsg({ message: error.response.data.error.message })
             })

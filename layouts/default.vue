@@ -50,6 +50,10 @@
       </v-btn>
       <v-toolbar-title v-text="title" />
       <v-spacer />
+      <p>
+        yo:
+        {{ $store.getters['auth/userName'] }}
+      </p>
       <v-btn
         icon
         @click.stop="rightDrawer = !rightDrawer"
