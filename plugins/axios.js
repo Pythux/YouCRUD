@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Axios from 'axios'
 
-const axiosAuth = Axios.create(
+export const axiosAuth = Axios.create(
     {
         baseURL: process.env.baseUrl,
         headers: {

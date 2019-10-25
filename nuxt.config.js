@@ -2,7 +2,7 @@ import fs from 'fs'
 import colors from 'vuetify/es5/util/colors'
 
 export default {
-    mode: 'spa',
+    mode: 'spa', // spa
     env: { // environement variables
         API_KEY: 'AIzaSyDgqSTVHy0xyFmYDwA9eczZbu-Fw2u9KKc',
         baseUrl: process.env.baseUrl || 'https://my.firebaseio.com',
@@ -36,13 +36,16 @@ export default {
     /*
     ** Plugins to load before mounting the App: all files in directorie "plugins"
     */
-    plugins: fs.readdirSync('./plugins').map(plug => `~/plugins/${plug}`),
+    plugins: fs.readdirSync('./plugins').map(plug => ({ src: `@/plugins/${plug}`, mode: 'client' })),
+    router: {
+        middleware: ['auth'],
+    },
     /*
     ** Nuxt.js dev-modules
     */
     buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
-        '@nuxtjs/eslint-module',
+        // '@nuxtjs/eslint-module',
         '@nuxtjs/vuetify',
     ],
     /*
@@ -75,7 +78,11 @@ export default {
     ** Build configuration
     */
     build: {
-    /*
+        // babel: {
+        //     plugins: ['babel-plugin-transform-class-properties'],
+        // },
+        // transpile: [a => { console.log(a); return true }],
+        /*
     ** You can extend webpack config here
     */
         extend(config, ctx) {

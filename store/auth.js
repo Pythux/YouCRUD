@@ -1,10 +1,11 @@
 
-import http from '@/plugins/axios'
+import { axiosAuth } from '@/plugins/axios'
+const http = axiosAuth
 
 export default {
     state: {
-        idToken: null,
-        refreshToken: null,
+        idToken: undefined,
+        refreshToken: undefined,
     },
     getters: {
         userName: state => {
@@ -19,23 +20,24 @@ export default {
         set_idToken_and_refreshToken(state, idTokenAndRefreshToken) {
             state.idToken = idTokenAndRefreshToken.idToken
             state.refreshToken = idTokenAndRefreshToken.refreshToken
+            console.log('idToken stored !')
         },
     },
     actions: {
-        login({ commit, dispatch }, idTokenAndRefreshToken) {
-            localStorage.setItem('refreshToken', idTokenAndRefreshToken.refreshToken)
+        login({ commit, dispatch, state }, idTokenAndRefreshToken) {
+            localStorage.setItem('auth/refreshToken', idTokenAndRefreshToken.refreshToken)
             commit('set_idToken_and_refreshToken', idTokenAndRefreshToken)
             dispatch('refresh', idTokenAndRefreshToken.expiresIn)
         },
         logout({ commit }) {
-            localStorage.removeItem('refreshToken')
+            localStorage.removeItem('auth/refreshToken')
             commit('set_idToken_and_refreshToken', { idToken: null, refreshToken: null })
         },
         check_stored_login({ dispatch }) {
-            const refreshToken = localStorage.getItem('refreshToken')
+            const refreshToken = localStorage.getItem('auth/refreshToken')
             if (refreshToken) {
                 console.log('try refreshToken from localStorage')
-                http.post(`${process.env.secureToken_URL}?key=${process.env.API_KEY}`, {
+                return http.post(`${process.env.secureToken_URL}?key=${process.env.API_KEY}`, {
                     grant_type: 'refresh_token',
                     refresh_token: refreshToken,
                 }).then(response => {

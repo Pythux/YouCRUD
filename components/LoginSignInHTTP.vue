@@ -66,7 +66,7 @@ export default {
                 const d = response.data
                 this.$store.dispatch('auth/login',
                     { idToken: d.idToken, expiresIn: d.expiresIn, refreshToken: d.refreshToken })
-                this.$router.push('/')
+                this.$router.push(this.$route.query.redirect || '/')
             }).catch(error => {
                 this.showErrorMsg({ message: error.response.data.error.message })
             })

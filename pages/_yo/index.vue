@@ -9,8 +9,5 @@ export default {
     validate(data) {
         return /^\d+$/.test(data.params.yo)
     },
-    mounted() {
-        this.$http.get('/yolo')
-    },
 }
 </script>
