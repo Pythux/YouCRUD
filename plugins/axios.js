@@ -12,3 +12,9 @@ export const axiosAuth = Axios.create(
 )
 
 Vue.prototype.$http = axiosAuth
+
+// store user stuff that only he can see and change:
+// https://you-crud.firebaseio.com/users/<user_id>.json?auth=<idToken>
+
+// let firebase gen the id key: POST
+// set the ID key: PUT

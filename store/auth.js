@@ -3,10 +3,10 @@ import { axiosAuth } from '@/plugins/axios'
 const http = axiosAuth
 
 export default {
-    state: {
+    state: () => ({
         idToken: undefined,
         refreshToken: undefined,
-    },
+    }),
     getters: {
         userName: state => {
             if (state.idToken) {
@@ -20,7 +20,6 @@ export default {
         set_idToken_and_refreshToken(state, idTokenAndRefreshToken) {
             state.idToken = idTokenAndRefreshToken.idToken
             state.refreshToken = idTokenAndRefreshToken.refreshToken
-            console.log('idToken stored !')
         },
     },
     actions: {
@@ -41,7 +40,6 @@ export default {
                     grant_type: 'refresh_token',
                     refresh_token: refreshToken,
                 }).then(response => {
-                    console.log(response)
                     const refreshToken = response.data.refresh_token
                     const idToken = response.data.id_token
                     const expiresIn = response.data.expires_in
@@ -52,7 +50,7 @@ export default {
             }
         },
         refresh({ commit, dispatch }, expiresIn) {
-            setTimeout(() => dispatch('check_stored_login'), expiresIn * 1000)
+            setTimeout(() => dispatch('check_stored_login'), expiresIn * 1000 - 10000)
         },
     },
 }
