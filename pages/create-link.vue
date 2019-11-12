@@ -59,10 +59,9 @@ export default {
     },
     computed: {
         ytLink() {
-            return 'http://www.youtube.com/embed/' + this.ytId + '?autoplay=1'
+            return 'http://www.youtube.com/embed/' + this.ytId // + '?autoplay=1'
         },
         ytId() {
-            console.log('computed!')
             if (this.url.startsWith('https://www.youtube.com/watch')) {
                 const url = new URL(this.url)
                 return url.searchParams.get('v')
@@ -75,14 +74,20 @@ export default {
             this.currentTag = tag
         },
         addNewTag() {
-            console.log(this.currentTag)
             this.existingTags.push(this.currentTag)
             this.tags.push(this.currentTag)
             this.currentTag = ''
         },
         submit() {
-            console.log('submit:')
-            console.log(this.ytId)
+            if (this.url !== '') {
+                const toCreate = { name: this.name, tags: this.tags }
+                if (this.ytId) {
+                    toCreate.ytId = this.ytId
+                } else {
+                    toCreate.url = this.url
+                }
+                this.$http.post('/music', toCreate)
+            }
             // https://you-crud.firebaseio.com/users/<user_id>.json?auth=<idToken>
             // this.$http()
         },

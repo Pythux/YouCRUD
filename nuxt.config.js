@@ -5,7 +5,7 @@ export default {
     mode: 'spa', // spa
     env: { // environement variables
         API_KEY: 'AIzaSyDgqSTVHy0xyFmYDwA9eczZbu-Fw2u9KKc',
-        baseUrl: process.env.baseUrl || 'https://you-crud.firebaseio.com/users/',
+        baseUrl: process.env.baseUrl || 'https://you-crud.firebaseio.com',
         identitytoolkit_URL: 'https://identitytoolkit.googleapis.com/v1',
         secureToken_URL: 'https://securetoken.googleapis.com/v1/token',
     },
