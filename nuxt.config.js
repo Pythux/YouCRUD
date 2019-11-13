@@ -38,7 +38,8 @@ export default {
     */
     plugins: fs.readdirSync('./plugins').map(plug => ({ src: `@/plugins/${plug}`, mode: 'client' })),
     router: {
-        middleware: ['auth'],
+        middleware: fs.readdirSync('./middleware').map(middl => middl.split('.')[0])
+            .sort().filter(e => e !== 'README'),
     },
     /*
     ** Nuxt.js dev-modules
