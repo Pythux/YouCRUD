@@ -1,5 +1,5 @@
 <template lang="html">
-  <v-row justify="center">
+  <v-row justify="center" class="yolo">
     <v-col v-if="ytId" col="12">
       <iframe
         id="ytplayer"
@@ -50,7 +50,7 @@
 export default {
     data() {
         return {
-            name: null,
+            name: '',
             url: '',
             tags: [],
             existingTags: ['a', 'b'],

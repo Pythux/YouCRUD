@@ -13,6 +13,9 @@ export default {
                 return Object.keys(state.userDB.music).map(key => {
                     const obj = state.userDB.music[key]
                     obj.id = key
+                    if (obj.name === undefined) {
+                        obj.name = obj.id
+                    }
                     return obj
                 })
             } else {
