@@ -32,7 +32,7 @@ export default {
                 const onlyUnique = (value, index, self) => {
                     return self.indexOf(value) === index
                 }
-                return [].concat(liTags).filter(onlyUnique)
+                return liTags.reduce((flat, arr) => flat.concat(arr), []).filter(onlyUnique)
             }
             return []
         },

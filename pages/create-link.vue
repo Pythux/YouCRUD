@@ -21,7 +21,7 @@
             <v-text-field v-model="url" label="URL:" />
             <v-autocomplete
               v-model="tags"
-              :items="existingTags"
+              :items="$store.getters['userDB/tags']"
               :search-input="currentTag"
               :no-data-text="`press enter to add the tag: ${currentTag}`"
               outlined
@@ -53,7 +53,6 @@ export default {
             name: '',
             url: '',
             tags: [],
-            existingTags: this.$store.getters['userDB/tags'],
             currentTag: '',
         }
     },
