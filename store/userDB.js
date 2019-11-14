@@ -21,13 +21,29 @@ export default {
                 return []
             }
         },
+        tags(state) {
+            if (state.userDB) {
+                const liTags = []
+                Object.values(state.userDB.music).forEach(music => {
+                    if ('tags' in music) {
+                        liTags.push(music.tags)
+                    }
+                })
+                const onlyUnique = (value, index, self) => {
+                    return self.indexOf(value) === index
+                }
+                return [].concat(liTags).filter(onlyUnique)
+            }
+            return []
+        },
     },
     mutations: {
         set_userDB(state, userDB) {
             state.userDB = userDB
         },
-        add_music(state, music) {
-            state.userDB.music = Object.assign({}, state.userDB.music, music)
+        add_musics(state, musics) {
+            console.log('add: ', musics)
+            state.userDB.music = Object.assign({}, state.userDB.music, musics)
         },
         delete_music(state, key) {
             console.log('delete_music: ', key)
@@ -42,35 +58,40 @@ export default {
         saveUserDB({ state }) {
             localStorage.setItem('userDB', JSON.stringify(state.userDB))
         },
-        check_stored_userDB({ commit, dispatch }) {
+        async check_stored_userDB({ commit, dispatch }) {
             const localDB = localStorage.getItem('userDB')
             if (localDB) {
-                commit('set_userDB', JSON.parse(localDB))
-                dispatch('check_update_userDB')
+                await commit('set_userDB', JSON.parse(localDB))
+                await dispatch('check_update_userDB')
             } else {
                 http.get('/').then(response => dispatch('setSaveUserDB', response.data))
             }
         },
-        check_update_userDB({ dispatch, commit, state }) {
-            http.get('/music?shallow=true')
-                .then(response => {
-                    let update = false
-                    Object.keys(response.data).forEach(key => {
-                        if (!(key in state.userDB.music)) {
-                            update = true
-                            http.get(`/music/${key}`).then(response => commit('add_music', { [key]: response.data }))
-                        }
-                    })
-                    Object.keys(state.userDB.music).forEach(key => {
-                        if (!(key in response.data)) {
-                            update = true
-                            commit('delete_music', key)
-                        }
-                    })
-                    if (update) {
-                        dispatch('saveUserDB')
-                    }
-                })
+        async check_update_userDB({ dispatch, commit, state }) {
+            let update = false
+            const serverUserDB = (await http.get('/music?shallow=true')).data
+            const musicToAdd = {}
+
+            for (const key in serverUserDB) {
+                if (!(key in state.userDB.music)) {
+                    update = true
+                    const music = (await http.get(`/music/${key}`)).data
+                    musicToAdd[key] = music
+                }
+            }
+            if (update) {
+                await commit('add_musics', musicToAdd)
+            }
+
+            for (const key in state.userDB.music) {
+                if (!(key in serverUserDB)) {
+                    update = true
+                    await commit('delete_music', key)
+                }
+            }
+            if (update) {
+                await dispatch('saveUserDB')
+            }
         },
     },
 }

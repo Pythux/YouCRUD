@@ -53,7 +53,7 @@ export default {
             name: '',
             url: '',
             tags: [],
-            existingTags: ['a', 'b'],
+            existingTags: this.$store.getters['userDB/tags'],
             currentTag: '',
         }
     },
@@ -86,10 +86,11 @@ export default {
                 } else {
                     toCreate.url = this.url
                 }
-                this.$http.post('/music', toCreate)
+                this.$http.post('/music', toCreate).then(response => {
+                    const key = response.data.name
+                    this.$store.commit('userDB/add_musics', { [key]: toCreate })
+                })
             }
-            // https://you-crud.firebaseio.com/users/<user_id>.json?auth=<idToken>
-            // this.$http()
         },
     },
 }
