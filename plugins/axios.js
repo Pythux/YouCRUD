@@ -15,8 +15,10 @@ export default ({ store }) => {
     axiosAuth.interceptors.request.use(
         config => {
             if (config.url.startsWith('/') && store.state.auth.idToken) {
-                config.url = `${config.baseURL}/users/${store.getters['auth/jwtIdToken'].user_id}${config.url}.json`
-                config.url += `?auth=${store.state.auth.idToken}`
+                const [url, queryParams] = config.url.split('?')
+                config.url = `${config.baseURL}/users/${store.getters['auth/jwtIdToken'].user_id}${url}.json`
+                config.url += queryParams ? `?${queryParams}&` : '?'
+                config.url += `auth=${store.state.auth.idToken}`
             }
             return config
         }, error => {

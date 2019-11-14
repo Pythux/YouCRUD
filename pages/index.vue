@@ -1,5 +1,5 @@
 <template>
-  <row>
+  <v-row>
     <iframe
       v-if="ytId"
       id="ytplayer"
@@ -17,7 +17,7 @@
       class="elevation-1"
       @click:row="click"
     />
-  </row>
+  </v-row>
 </template>
 
 <script>
