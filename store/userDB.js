@@ -12,7 +12,7 @@ export default {
                 return Object.keys(state.userDB.music).map(key => {
                     const obj = { ...state.userDB.music[key] }
                     obj.id = key
-                    if (obj.name === undefined) {
+                    if (obj.name === undefined || obj.name === '') {
                         obj.name = obj.id
                     }
                     return obj
@@ -48,9 +48,14 @@ export default {
         delete_music(state, key) {
             console.log('delete_music: ', key)
             delete state.userDB.music[key]
+            state.userDB = { ...state.userDB }
         },
     },
     actions: {
+        deleteMusic({ commit }, key) {
+            http.delete(`/music/${key}`)
+                .then(() => { commit('delete_music', key) })
+        },
         setSaveUserDB({ dispatch, commit, state }, userDB) {
             commit('set_userDB', userDB)
             dispatch('saveUserDB')

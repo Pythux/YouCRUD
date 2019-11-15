@@ -2,7 +2,6 @@
   <v-row justify="center" class="yolo">
     <v-col v-if="ytId" col="12">
       <iframe
-        id="ytplayer"
         type="text/html"
         width="640"
         height="360"
@@ -34,6 +33,7 @@
 
 <script>
 import AutocompleteTags from '@/components/autocompleteTags'
+import { submitMusic } from '@/sharedJS/submitMusic'
 
 export default {
     components: {
@@ -60,18 +60,10 @@ export default {
     },
     methods: {
         submit() {
-            if (this.url !== '') {
-                const toCreate = { name: this.name, tags: this.tags }
-                if (this.ytId) {
-                    toCreate.ytId = this.ytId
-                } else {
-                    toCreate.url = this.url
-                }
-                this.$http.post('/music', toCreate).then(response => {
-                    const key = response.data.name
-                    this.$store.commit('userDB/add_musics', { [key]: toCreate })
-                })
-            }
+            submitMusic.call(this, this.name, this.url, this.ytId, this.tags)
+            this.name = ''
+            this.url = ''
+            this.tags = []
         },
     },
 }

@@ -1,6 +1,6 @@
 <template lang="html">
   <v-autocomplete
-    :items="$store.getters['userDB/tags']"
+    :items="existingTags"
     :search-input="currentTag"
     :no-data-text="`press enter to add the tag: ${currentTag}`"
     outlined
@@ -25,12 +25,18 @@ export default {
     data() {
         return {
             currentTag: '',
+            addedTags: [],
         }
+    },
+    computed: {
+        existingTags() {
+            return this.addedTags.concat(this.$store.getters['userDB/tags'])
+        },
     },
     methods: {
         addNewTag() {
-            this.existingTags.push(this.currentTag)
-            this.tags.push(this.currentTag)
+            this.addedTags.push(this.currentTag)
+            this.value.push(this.currentTag)
             this.currentTag = ''
         },
         updateCurrentTag(tag) {

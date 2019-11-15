@@ -28,14 +28,17 @@
           </v-tooltip>
         </v-toolbar>
         <v-card-text>
-          <v-form v-if="!isInfo" ref="form" @submit.prevent="submit">
+          <v-form v-if="!isInfo" @submit.prevent="submit">
             <v-text-field v-model="selected.name" label="Name" />
             <v-text-field v-model="selectedURL" label="URL:" />
             <AutocompleteTags v-model="selected.tags" />
             <v-card-actions>
+              <v-btn color="red darken-3" style="text-transform: none" @click="deleteMusic(selected)">
+                Delete
+              </v-btn>
               <v-spacer />
               <v-btn type="submit" color="success" style="text-transform: none">
-                {{ actionTxt }}
+                Update
               </v-btn>
             </v-card-actions>
           </v-form>
@@ -58,6 +61,7 @@
 
 <script>
 import AutocompleteTags from '@/components/autocompleteTags'
+import { submitMusic } from '@/sharedJS/submitMusic'
 
 export default {
     components: {
@@ -112,6 +116,13 @@ export default {
             }
             console.log(newObj)
             this.selected = newObj
+        },
+        submit() {
+            submitMusic.call(this, this.selected)
+        },
+        deleteMusic(elem) {
+            this.$store.dispatch('userDB/deleteMusic', elem.id)
+            this.selected = undefined
         },
     },
 }

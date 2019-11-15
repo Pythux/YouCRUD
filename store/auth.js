@@ -38,7 +38,6 @@ export default {
         check_stored_login({ dispatch }) {
             const refreshToken = localStorage.getItem('auth/refreshToken')
             if (refreshToken) {
-                console.log('try refreshToken from localStorage')
                 return http.post(`${process.env.secureToken_URL}?key=${process.env.API_KEY}`, {
                     grant_type: 'refresh_token',
                     refresh_token: refreshToken,
