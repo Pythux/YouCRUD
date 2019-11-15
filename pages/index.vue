@@ -2,7 +2,6 @@
   <v-row>
     <v-col v-if="ytId" xs="12" sm="10" md="9" lg="7">
       <iframe
-        id="ytplayer"
         type="text/html"
         width="640"
         height="360"
@@ -10,7 +9,10 @@
         frameborder="0"
       />
     </v-col>
-    <v-col v-if="selected" xs="12" sm="12" md="3">
+    <v-col v-else xs="12" sm="10" md="9" lg="7">
+      <div style="height: 360px" />
+    </v-col>
+    <v-col v-if="selected" xs="12" sm="12" md="3" lg="5">
       <v-card class="elevation-1">
         <v-toolbar color="primary" dark flat>
           <v-toolbar-title>{{ actionTxt }}:</v-toolbar-title>
@@ -18,8 +20,8 @@
           <v-tooltip bottom>
             <template v-slot:activator="{ on }">
               <v-btn large fab color="purple" v-on="on" @click="isInfo = !isInfo">
-                <UserPlusIcon v-if="isInfo" size="1.5x" />
-                <TerminalIcon v-else />
+                <EditIcon v-if="isInfo" />
+                <InfoIcon v-else />
               </v-btn>
             </template>
             <span>{{ otherActionTxt }}</span>
@@ -29,21 +31,7 @@
           <v-form v-if="!isInfo" ref="form" @submit.prevent="submit">
             <v-text-field v-model="selected.name" label="Name" />
             <v-text-field v-model="selectedURL" label="URL:" />
-            <v-autocomplete
-              v-model="selected.tags"
-              :items="$store.getters['userDB/tags']"
-              :search-input="currentTag"
-              :no-data-text="`press enter to add the tag: ${currentTag}`"
-              outlined
-              dense
-              chips
-              small-chips
-              label="Tags"
-              multiple
-              autocomplete="off"
-              @update:search-input="updateCurrentTag"
-              @keydown.enter.native.prevent="addNewTag"
-            />
+            <AutocompleteTags v-model="selected.tags" />
             <v-card-actions>
               <v-spacer />
               <v-btn type="submit" color="success" style="text-transform: none">
@@ -60,7 +48,7 @@
     <v-data-table
       :headers="headers"
       disable-sort
-      :items="items"
+      :items="$store.getters['userDB/music']"
       :items-per-page="15"
       class="elevation-1"
       @click:row="click"
@@ -69,7 +57,12 @@
 </template>
 
 <script>
+import AutocompleteTags from '@/components/autocompleteTags'
+
 export default {
+    components: {
+        AutocompleteTags,
+    },
     data() {
         return {
             headers: [
@@ -83,13 +76,9 @@ export default {
             selected: null,
             isInfo: true,
             arrayActionTxt: { true: 'Info', false: 'Update' },
-            currentTag: '',
         }
     },
     computed: {
-        items() {
-            return this.$store.getters['userDB/music']
-        },
         ytLink() {
             return 'http://www.youtube.com/embed/' + this.ytId // + '?autoplay=1'
         },
@@ -123,14 +112,6 @@ export default {
             }
             console.log(newObj)
             this.selected = newObj
-        },
-        addNewTag() {
-            this.existingTags.push(this.currentTag)
-            this.tags.push(this.currentTag)
-            this.currentTag = ''
-        },
-        updateCurrentTag(tag) {
-            this.currentTag = tag
         },
     },
 }

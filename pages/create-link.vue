@@ -19,21 +19,7 @@
           <v-card-text>
             <v-text-field v-model="name" label="Name" />
             <v-text-field v-model="url" label="URL:" />
-            <v-autocomplete
-              v-model="tags"
-              :items="$store.getters['userDB/tags']"
-              :search-input="currentTag"
-              :no-data-text="`press enter to add the tag: ${currentTag}`"
-              outlined
-              dense
-              chips
-              small-chips
-              label="Tags"
-              multiple
-              autocomplete="off"
-              @update:search-input="updateCurrentTag"
-              @keydown.enter.native.prevent="addNewTag"
-            />
+            <AutocompleteTags v-model="tags" />
           </v-card-text>
           <v-card-actions>
             <v-btn type="submit">
@@ -47,13 +33,17 @@
 </template>
 
 <script>
+import AutocompleteTags from '@/components/autocompleteTags'
+
 export default {
+    components: {
+        AutocompleteTags,
+    },
     data() {
         return {
             name: '',
             url: '',
             tags: [],
-            currentTag: '',
         }
     },
     computed: {
@@ -69,14 +59,6 @@ export default {
         },
     },
     methods: {
-        updateCurrentTag(tag) {
-            this.currentTag = tag
-        },
-        addNewTag() {
-            this.existingTags.push(this.currentTag)
-            this.tags.push(this.currentTag)
-            this.currentTag = ''
-        },
         submit() {
             if (this.url !== '') {
                 const toCreate = { name: this.name, tags: this.tags }
