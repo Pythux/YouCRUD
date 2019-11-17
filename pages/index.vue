@@ -1,11 +1,11 @@
 <template>
   <v-row>
-    <v-col v-if="ytId" xs="12" sm="10" md="9" lg="7">
+    <v-col v-if="selected && selected.ytId" xs="12" sm="10" md="9" lg="7">
       <iframe
         type="text/html"
         width="640"
         height="360"
-        :src="ytLink"
+        :src="'http://www.youtube.com/embed/' + selected.ytId"
         frameborder="0"
       />
     </v-col>
@@ -40,7 +40,7 @@
               <v-btn type="submit" color="success" style="text-transform: none">
                 Update
               </v-btn>
-              <v-btn color="success" style="text-transform: none" @click="submit();goNextUndefined()">
+              <v-btn color="success" style="text-transform: none" @click="submitAndgoNextUndefined">
                 Update an go next undefined
               </v-btn>
             </v-card-actions>
@@ -97,15 +97,6 @@ export default {
         }
     },
     computed: {
-        ytLink() {
-            return 'http://www.youtube.com/embed/' + this.ytId // + '?autoplay=1'
-        },
-        ytId() {
-            if (this.selected) {
-                return this.selected.ytId
-            }
-            return undefined
-        },
         actionTxt() {
             return this.arrayActionTxt[this.isInfo]
         },
@@ -114,7 +105,7 @@ export default {
         },
         selectedURL() {
             if (this.selected.ytId) {
-                return `https://www.youtube.com/watch?v=${this.ytId}`
+                return `https://www.youtube.com/watch?v=${this.selected.ytId}`
             }
             return this.selected.url
         },
@@ -128,22 +119,23 @@ export default {
             if (!newObj.name) {
                 newObj.name = ''
             }
-            console.log(newObj)
             this.selected = newObj
         },
         submit() {
             submitMusic.call(this, this.selected)
-            // console.log(this.selected.id)
         },
         deleteMusic(elem) {
             this.$store.dispatch('userDB/deleteMusic', elem.id)
             this.selected = undefined
         },
-        goNextUndefined() {
-            console.log('go next')
-            for (const m in this.$store.getters['userDB/music']) {
-                console.log(m)
-                break
+        async submitAndgoNextUndefined() {
+            await submitMusic.call(this, this.selected)
+            for (const index in this.$store.getters['userDB/music']) {
+                const music = this.$store.getters['userDB/music'][index]
+                if (music.id === music.name || music.name === '') {
+                    this.selected = music
+                    break
+                }
             }
         },
     },
