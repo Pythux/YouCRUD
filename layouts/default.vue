@@ -43,7 +43,7 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
+<style lang="css">
 .v-application a {
     text-decoration: none;
     color: rgb(226, 225, 220);

@@ -14,6 +14,10 @@
         <form @submit.prevent="submit">
           <v-card-title>
             Save a link:
+            <v-spacer />
+            <nuxt-link to="/create-multiple-link">
+              <v-btn>add multiple links ?</v-btn>
+            </nuxt-link>
           </v-card-title>
           <v-card-text>
             <v-text-field v-model="name" label="Name" />
