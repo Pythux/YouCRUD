@@ -1,8 +1,9 @@
 
-export function submitMusic(name, url, ytId, tags) {
+export async function submitMusic(name, url, ytId, tags) {
     let updateId
+    let obj
     if (arguments.length === 1) {
-        const obj = arguments[0]
+        obj = arguments[0]
         name = obj.name
         url = obj.url
         ytId = obj.ytId
@@ -36,14 +37,13 @@ export function submitMusic(name, url, ytId, tags) {
             console.log('alreadyExist')
             console.log(alreadyExist)
         } else {
-            this.$http.post('/music', toCreate)
-                .then(response => {
-                    const key = response.data.name
-                    this.$store.commit('userDB/add_musics', { [key]: toCreate })
-                    if (updateId) {
-                        this.$http.delete('/music/' + updateId)
-                    }
-                })
+            const key = (await this.$http.post('/music', toCreate)).data.name
+            await this.$store.commit('userDB/add_musics', { [key]: toCreate })
+            if (updateId) {
+                await this.$http.delete('/music/' + updateId)
+                this.$store.commit('userDB/delete_music', updateId)
+                obj.id = key
+            }
         }
     } else {
         console.log("no url or ytId, can't create/update")

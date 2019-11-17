@@ -9,7 +9,7 @@
         frameborder="0"
       />
     </v-col>
-    <v-col v-else xs="12" sm="10" md="9" lg="7">
+    <v-col v-else cols="12">
       <div style="height: 360px" />
     </v-col>
     <v-col v-if="selected" xs="12" sm="12" md="3" lg="5">
@@ -40,6 +40,9 @@
               <v-btn type="submit" color="success" style="text-transform: none">
                 Update
               </v-btn>
+              <v-btn color="success" style="text-transform: none" @click="submit();goNextUndefined()">
+                Update an go next undefined
+              </v-btn>
             </v-card-actions>
           </v-form>
           <template v-else>
@@ -48,14 +51,24 @@
         </v-card-text>
       </v-card>
     </v-col>
-    <v-data-table
-      :headers="headers"
-      disable-sort
-      :items="$store.getters['userDB/music']"
-      :items-per-page="15"
-      class="elevation-1"
-      @click:row="click"
-    />
+    <v-col cols="12">
+      <v-text-field
+        v-model="search"
+        append-icon="mdi-magnify"
+        label="Search"
+        single-line
+        hide-details
+      />
+      <v-data-table
+        :headers="headers"
+        disable-sort
+        :search="search"
+        :items="$store.getters['userDB/music']"
+        :items-per-page="15"
+        class="elevation-1"
+        @click:row="click"
+      />
+    </v-col>
   </v-row>
 </template>
 
@@ -77,6 +90,7 @@ export default {
                 },
                 { text: 'Tags', value: 'tags' },
             ],
+            search: '',
             selected: null,
             isInfo: true,
             arrayActionTxt: { true: 'Info', false: 'Update' },
@@ -119,10 +133,18 @@ export default {
         },
         submit() {
             submitMusic.call(this, this.selected)
+            // console.log(this.selected.id)
         },
         deleteMusic(elem) {
             this.$store.dispatch('userDB/deleteMusic', elem.id)
             this.selected = undefined
+        },
+        goNextUndefined() {
+            console.log('go next')
+            for (const m in this.$store.getters['userDB/music']) {
+                console.log(m)
+                break
+            }
         },
     },
 }

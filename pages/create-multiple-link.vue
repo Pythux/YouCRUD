@@ -50,6 +50,7 @@ export default {
                     }
                     submitMusic.call(this, obj)
                 })
+                this.$store.dispatch('userDB/saveUserDB')
             }
         },
     },
