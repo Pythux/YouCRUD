@@ -121,6 +121,10 @@ export default {
             }
             this.selected = newObj
         },
+        filterTable(objA, objB) {
+            console.log(objA, objB)
+            return objA.name > objB.name
+        },
         submit() {
             submitMusic.call(this, this.selected)
         },

@@ -2,6 +2,15 @@
 import { axiosAuth } from '@/plugins/axios'
 const http = axiosAuth
 
+function sortSring(strA, strB) {
+    if (strA < strB) {
+        return -1
+    } else if (strA > strB) {
+        return 1
+    }
+    return 0
+}
+
 export default {
     state: () => ({
         userDB: null,
@@ -16,6 +25,8 @@ export default {
                         obj.name = obj.id
                     }
                     return obj
+                }).sort((a, b) => {
+                    return sortSring(a.name.toLowerCase(), b.name.toLowerCase())
                 })
             } else {
                 return []
