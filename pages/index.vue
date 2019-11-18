@@ -51,6 +51,18 @@
         </v-card-text>
       </v-card>
     </v-col>
+    <v-row>
+      <template v-for="tag in $store.getters['userDB/tags']">
+        <v-chip
+          :key="tag"
+          :outlined="activTags[tag]"
+          style="margin: 5px"
+          @click="switchActiveTag(tag)"
+        >
+          {{ tag }}
+        </v-chip>
+      </template>
+    </v-row>
     <v-col cols="12">
       <v-text-field
         v-model="search"
@@ -94,6 +106,7 @@ export default {
             selected: null,
             isInfo: true,
             arrayActionTxt: { true: 'Info', false: 'Update' },
+            activTags: {},
         }
     },
     computed: {
@@ -111,6 +124,9 @@ export default {
         },
     },
     methods: {
+        switchActiveTag(tag) {
+            this.activTags = Object.assign({}, this.activTags, { [tag]: !this.activTags[tag] })
+        },
         click(obj) {
             const newObj = { ...obj }
             if (!newObj.tags) {
@@ -121,9 +137,11 @@ export default {
             }
             this.selected = newObj
         },
-        filterTable(objA, objB) {
-            console.log(objA, objB)
-            return objA.name > objB.name
+        isActiveTag(tag) {
+            if (!(tag in this.isActivTag)) {
+                this.isActivTag.tag = false
+            }
+            return this.isActivTag.tag
         },
         submit() {
             submitMusic.call(this, this.selected)
