@@ -1,17 +1,10 @@
 <template>
   <v-row>
-    <v-col v-if="selected && selected.ytId" xs="12" sm="10" md="9" lg="7">
-      <iframe
-        type="text/html"
-        width="640"
-        height="360"
-        :src="'http://www.youtube.com/embed/' + selected.ytId"
-        frameborder="0"
-      />
-    </v-col>
+    <YtPlayer v-if="selected && selected.ytId" :yt-id="selected.ytId" @ended="changeMusic" />
     <v-col v-else cols="12">
       <div style="height: 360px" />
     </v-col>
+
     <v-col v-if="selected" xs="12" sm="12" md="3" lg="5">
       <v-card class="elevation-1">
         <v-toolbar color="primary" dark flat>
@@ -55,7 +48,7 @@
       <template v-for="tag in $store.getters['userDB/tags']">
         <v-chip
           :key="tag"
-          :outlined="activTags[tag]"
+          :outlined="!activTags[tag]"
           style="margin: 5px"
           @click="switchActiveTag(tag)"
         >
@@ -75,7 +68,7 @@
         :headers="headers"
         disable-sort
         :search="search"
-        :items="$store.getters['userDB/music']"
+        :items="musicItems"
         :items-per-page="15"
         class="elevation-1"
         @click:row="click"
@@ -85,12 +78,14 @@
 </template>
 
 <script>
+import YtPlayer from '@/components/YtPlayer'
 import AutocompleteTags from '@/components/autocompleteTags'
 import { submitMusic } from '@/sharedJS/submitMusic'
 
 export default {
     components: {
         AutocompleteTags,
+        YtPlayer,
     },
     data() {
         return {
@@ -122,6 +117,20 @@ export default {
             }
             return this.selected.url
         },
+        musicItems() {
+            const liActivTags = Object.keys(this.activTags).filter(tag => this.activTags[tag])
+            if (liActivTags.length === 0) {
+                return this.$store.getters['userDB/music']
+            }
+            return this.$store.getters['userDB/music'].filter(music => {
+                for (const tagIndex in music.tags) {
+                    if (liActivTags.includes(music.tags[tagIndex])) {
+                        return true
+                    }
+                }
+                return false
+            })
+        },
     },
     methods: {
         switchActiveTag(tag) {
@@ -137,11 +146,17 @@ export default {
             }
             this.selected = newObj
         },
-        isActiveTag(tag) {
-            if (!(tag in this.isActivTag)) {
-                this.isActivTag.tag = false
+        changeMusic() {
+            console.log('change music')
+            function getRandomInt(max) {
+                return Math.floor(Math.random() * Math.floor(max))
             }
-            return this.isActivTag.tag
+            const otherMusic = this.musicItems.filter(m => m.id !== this.selected.id)
+            if (otherMusic.length === 0) {
+                console.log("can't play another music")
+            } else {
+                this.selected = otherMusic[getRandomInt(otherMusic.length)]
+            }
         },
         submit() {
             submitMusic.call(this, this.selected)
