@@ -78,7 +78,7 @@ export default {
             const localDB = localStorage.getItem('userDB')
             if (localDB) {
                 await commit('set_userDB', JSON.parse(localDB))
-                await dispatch('check_update_userDB')
+                dispatch('check_update_userDB') // don't wait the updates
             } else {
                 http.get('/').then(response => dispatch('setSaveUserDB', response.data))
             }

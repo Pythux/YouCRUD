@@ -170,9 +170,15 @@ export default {
                 const music = this.$store.getters['userDB/music'][index]
                 if (music.id === music.name || music.name === '') {
                     this.selected = music
+                    const url = 'https://www.googleapis.com/youtube/v3/videos' +
+                        `?part=snippet&id=${this.selected.ytId}&key=${process.env.API_KEY}`
+                    console.log((await this.$http.get(url)).data)
+                    // this.selected.name = (await this.$http.get(url)).data
                     break
                 }
             }
+            console.log('end of updates')
+            // this.$store.dispatch('userDB/saveUserDB')
         },
     },
 }
