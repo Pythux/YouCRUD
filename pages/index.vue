@@ -39,7 +39,11 @@
             </v-card-actions>
           </v-form>
           <template v-else>
-            {{ selected }}
+            {{ selected.name }}
+            <br>
+            <v-chip v-for="tag in selected.tags" :key="tag" style="margin: 5px">
+              {{ tag }}
+            </v-chip>
           </template>
         </v-card-text>
       </v-card>
