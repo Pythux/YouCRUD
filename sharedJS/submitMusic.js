@@ -12,7 +12,8 @@ export async function submitMusic(name, url, ytId, tags) {
     }
 
     if (url || ytId) {
-        const toCreate = { name, tags }
+        const toCreate = { name }
+        toCreate.tags = tags || []
         if (ytId) {
             toCreate.ytId = ytId
         } else {

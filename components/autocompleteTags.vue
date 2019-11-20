@@ -35,9 +35,13 @@ export default {
     },
     methods: {
         addNewTag() {
-            this.addedTags.push(this.currentTag)
-            this.value.push(this.currentTag)
-            this.currentTag = ''
+            if (!this.existingTags.includes(this.currentTag)) {
+                this.addedTags.push(this.currentTag)
+                this.value.push(this.currentTag)
+                this.currentTag = ''
+            } else {
+                this.currentTag = ''
+            }
         },
         updateCurrentTag(tag) {
             this.currentTag = tag

@@ -5,7 +5,7 @@
       id="player"
       :keys="ytId"
       type="text/html"
-      width="640"
+      width="940"
       height="360"
       :src="`http://www.youtube.com/embed/?enablejsapi=1`"
       frameborder="0"
@@ -30,12 +30,12 @@ export default {
     },
     watch: {
         ytId() {
-            player.loadVideoById(this.ytId)
+            player.loadVideoById(this.ytId) // eslint-disable-line no-undef
         },
     },
     mounted() {
         window.onYouTubePlayerAPIReady = () => {
-            player = new YT.Player('player', {
+            player = new YT.Player('player', { // eslint-disable-line no-undef
                 // height: '360',
                 // width: '640',
                 // videoId: this.ytId,
@@ -49,7 +49,7 @@ export default {
     methods: {
         // autoplay video
         onPlayerReady(event) {
-            player.loadVideoById(this.ytId)
+            player.loadVideoById(this.ytId) // eslint-disable-line no-undef
             event.target.playVideo()
         },
         // when video ends
