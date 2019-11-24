@@ -1,17 +1,11 @@
 
-function mapDOM(element, json) {
+export function mapDOM(element, toJson) {
     const treeObject = {}
 
     // If string convert to document Node
     if (typeof element === 'string') {
-        if (window.DOMParser) {
-            parser = new DOMParser()
-            docNode = parser.parseFromString(element, 'text/xml')
-        } else { // Microsoft strikes again
-            docNode = new ActiveXObject('Microsoft.XMLDOM')
-            docNode.async = false
-            docNode.loadXML(element)
-        }
+        const parser = new DOMParser()
+        const docNode = parser.parseFromString(element, 'text/xml')
         element = docNode.firstChild
     }
 
@@ -22,8 +16,8 @@ function mapDOM(element, json) {
         if (nodeList != null) {
             if (nodeList.length) {
                 object.content = []
-                for (var i = 0; i < nodeList.length; i++) {
-                    if (nodeList[i].nodeType == 3) {
+                for (let i = 0; i < nodeList.length; i++) {
+                    if (nodeList[i].nodeType === 3) {
                         object.content.push(nodeList[i].nodeValue)
                     } else {
                         object.content.push({})
@@ -35,7 +29,7 @@ function mapDOM(element, json) {
         if (element.attributes != null) {
             if (element.attributes.length) {
                 object.attributes = {}
-                for (var i = 0; i < element.attributes.length; i++) {
+                for (let i = 0; i < element.attributes.length; i++) {
                     object.attributes[element.attributes[i].nodeName] = element.attributes[i].nodeValue
                 }
             }
@@ -43,5 +37,18 @@ function mapDOM(element, json) {
     }
     treeHTML(element, treeObject)
 
-    return (json) ? JSON.stringify(treeObject) : treeObject
+    return (toJson) ? JSON.stringify(treeObject) : treeObject
+}
+
+export function fromHtmlFav(htmlStrFav) {
+    if (!htmlStrFav) {
+        return []
+    }
+    const regex = /HREF="([^"]*)"/g
+    const found = htmlStrFav.match(regex)
+    const arr = []
+    found.forEach(href => {
+        arr.push(href.match(/"([^"]*)"/)[1])
+    })
+    return arr
 }

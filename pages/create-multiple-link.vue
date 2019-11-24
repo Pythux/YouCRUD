@@ -9,10 +9,17 @@
         </nuxt-link>
       </v-card-title>
       <v-card-text>
-        <p>input data from copie/past of file:</p>
-        <v-textarea v-model="musics" label="musics (JSON)" />
-        <v-file-input v-model="yo" label="musicsTxt (Text File)" />
+        <p>Input data from copie/past or file:</p>
+        <v-textarea v-model="musicsTxtArea" label="musics (JSON)" />
+        <v-file-input label="musicsTxt (Text File)" :loading="inputLoading" @change="fileInput" />
+        <br>
+        <br>
+        <br>
+        <p>Transform input from eval or click on a predefined function button:</p>
         <v-textarea v-model="extractFunction" label="extractFunction (for musics/musicsTxt)" />
+        <v-btn @click="fromHtmlFavToArr">
+          From HTML exported favories
+        </v-btn>
       </v-card-text>
       <v-card-actions>
         <v-btn type="submit">
@@ -26,31 +33,62 @@
 <script>
 import { submitMusic } from '@/sharedJS/submitMusic'
 
+import { fromHtmlFav } from '@/sharedJS/mapDOM'
+
 export default {
     data() {
         return {
-            musics: '',
+            arrOfMusics: '',
+            musicsTxtArea: '',
+            musicsFile: '',
+            inputLoading: false,
             extractFunction: '',
-            yo: undefined,
         }
     },
-    watch: {
-        yo() {
-            console.log(this.yo)
-            const file = this.yo
-            const reader = new FileReader()
-            reader.readAsText(file)
-            console.log(reader)
+    computed: {
+        musicsToTransform() {
+            let musics
+            if (this.musicsTxtArea !== '') {
+                musics = JSON.parse(this.musicsTxtArea)
+            } else if (this.musicsFile !== '') {
+                musics = this.musicsFile
+            } else {
+                console.log('textarea and fileInput empty')
+                return
+            }
+            return musics
         },
     },
     methods: {
+        fileInput(file) {
+            if (!file) {
+                return
+            }
+            this.inputLoading = true
+            const reader = new FileReader()
+            reader.onload = event => {
+                this.inputLoading = false
+                this.musicsFile = event.target.result
+            }
+            reader.readAsText(file)
+        },
+        fromHtmlFavToArr() {
+            this.arrOfMusics = fromHtmlFav(this.musicsToTransform)
+            console.log(`found ${this.arrOfMusics.length} that could be added`)
+        },
         submit() {
-            let musics = JSON.parse(this.musics)
-            musics = eval(this.extractFunction) // eslint-disable-line no-eval
+            let musics = this.arrOfMusics
+            if (this.extractFunction !== '') {
+                musics = eval(this.extractFunction) // eslint-disable-line no-eval
+            }
+
             if (!Array.isArray(musics)) {
                 console.log('eval extractFunction should return a list of urls')
             } else {
+                console.log(`add ${musics.length} urls ...`)
+                console.log(musics)
                 musics.forEach(urlStr => {
+                    console.log(urlStr)
                     const obj = {}
                     const url = new URL(urlStr)
                     if (urlStr.startsWith('https://www.youtube.com/watch')) {
@@ -62,7 +100,9 @@ export default {
                     }
                     submitMusic.call(this, obj)
                 })
+                console.log('urls added')
                 this.$store.dispatch('userDB/saveUserDB')
+                console.log('local storage updated')
             }
         },
     },
