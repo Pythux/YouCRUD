@@ -48,6 +48,9 @@
         </v-card-text>
       </v-card>
     </v-col>
+    <v-btn @click="changeMusic()">
+      Play next random
+    </v-btn>
     <v-row>
       <template v-for="tag in $store.getters['userDB/tags']">
         <v-chip
@@ -154,7 +157,8 @@ export default {
             function getRandomInt(max) {
                 return Math.floor(Math.random() * Math.floor(max))
             }
-            const otherMusic = this.musicItems.filter(m => m.id !== this.selected.id)
+            const selectedId = this.selected ? this.selected.id : undefined
+            const otherMusic = this.musicItems.filter(m => m.id !== selectedId)
             if (otherMusic.length === 0) {
                 console.log("can't play another music")
             } else {

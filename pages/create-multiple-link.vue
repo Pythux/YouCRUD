@@ -9,8 +9,10 @@
         </nuxt-link>
       </v-card-title>
       <v-card-text>
+        <p>input data from copie/past of file:</p>
         <v-textarea v-model="musics" label="musics (JSON)" />
-        <v-textarea v-model="extractFunction" label="extractFunction" />
+        <v-file-input v-model="yo" label="musicsTxt (Text File)" />
+        <v-textarea v-model="extractFunction" label="extractFunction (for musics/musicsTxt)" />
       </v-card-text>
       <v-card-actions>
         <v-btn type="submit">
@@ -29,7 +31,17 @@ export default {
         return {
             musics: '',
             extractFunction: '',
+            yo: undefined,
         }
+    },
+    watch: {
+        yo() {
+            console.log(this.yo)
+            const file = this.yo
+            const reader = new FileReader()
+            reader.readAsText(file)
+            console.log(reader)
+        },
     },
     methods: {
         submit() {
