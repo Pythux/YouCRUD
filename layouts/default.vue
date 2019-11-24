@@ -16,9 +16,19 @@
         <v-toolbar-title v-text="title" />
       </nuxt-link>
       <v-spacer />
-      <div>
-        {{ $store.getters['auth/userName'] }}
-      </div>
+      <a id="downloadAnchorElem" style="display:none" />
+      <v-menu offset-y>
+        <template v-slot:activator="{ on }">
+          <v-btn color="primary" dark v-on="on">
+            {{ $store.getters['auth/userName'] }}
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item @click="downloadJSON">
+            <v-list-item-title>Download User Data</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </v-app-bar>
     <v-content>
       <v-container>
@@ -39,6 +49,16 @@ export default {
             rightDrawer: false,
             title: 'YouCRUD',
         }
+    },
+    methods: {
+        async downloadJSON() {
+            const response = await this.$http.get('/')
+            const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(response.data))
+            const dlAnchorElem = document.getElementById('downloadAnchorElem')
+            dlAnchorElem.setAttribute('href', dataStr)
+            dlAnchorElem.setAttribute('download', 'userDB.json')
+            dlAnchorElem.click()
+        },
     },
 }
 </script>
