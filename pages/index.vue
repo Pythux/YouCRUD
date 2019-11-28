@@ -51,17 +51,20 @@
     <v-btn @click="changeMusic()">
       Play next random
     </v-btn>
+    <v-btn @click="deleteTags()">
+      deleteTags
+    </v-btn>
     <v-row>
-      <!-- <template v-for="tag in $store.getters['userDB/tags']">
+      <template v-for="tag in displayedTags">
         <v-chip
           :key="tag"
           :outlined="!activTags[tag]"
           style="margin: 5px"
           @click="switchActiveTag(tag)"
         >
-          {{ tag }}
+          {{ tag }} ({{ $store.getters['userDB/occurencesOfTags'][tag] }})
         </v-chip>
-      </template> -->
+      </template>
     </v-row>
     <v-col cols="12">
       <v-text-field
@@ -109,6 +112,8 @@ export default {
             isInfo: true,
             arrayActionTxt: { true: 'Info', false: 'Update' },
             activTags: {},
+            displayedTags: [...this.$store.getters['userDB/tags']]
+                .filter(tag => this.$store.getters['userDB/occurencesOfTags'][tag] < 2),
         }
     },
     computed: {
@@ -142,6 +147,33 @@ export default {
     methods: {
         switchActiveTag(tag) {
             this.activTags = Object.assign({}, this.activTags, { [tag]: !this.activTags[tag] })
+        },
+        async deleteTags() {
+            const toCompute = []
+            const tagsToDelete = [undefined]
+            for (const key in this.activTags) {
+                if (this.activTags[key]) {
+                    tagsToDelete.push(key)
+                }
+            }
+            console.log(tagsToDelete)
+            Object.values(this.$store.getters['userDB/music']).forEach(music => {
+                const copieMusic = { ...music }
+                copieMusic.tags = [...music.tags]
+                tagsToDelete.forEach(tag => {
+                    if (copieMusic.tags.includes(tag)) {
+                        copieMusic.tags.splice(copieMusic.tags.indexOf(tag), 1)
+                    }
+                })
+                if (copieMusic.tags.length !== music.tags.length) {
+                    console.log(music.tags.length, copieMusic.tags.length)
+                    toCompute.push(async () => { await submitMusic.call(this, copieMusic) })
+                }
+            })
+            console.log('to compute: ' + toCompute.length)
+            await Promise.all(toCompute.map(f => f()))
+            console.log('done')
+            this.$store.dispatch('userDB/saveUserDB')
         },
         click(obj) {
             const newObj = { ...obj }

@@ -43,9 +43,23 @@ export default {
                 const onlyUnique = (value, index, self) => {
                     return self.indexOf(value) === index
                 }
-                return liTags.reduce((flat, arr) => flat.concat(arr), []).filter(onlyUnique).sort(sortSring)
+                return liTags.reduce((flat, arr) => flat.concat(arr), []).sort().filter(onlyUnique)
             }
             return []
+        },
+        occurencesOfTags(state) {
+            const occurences = {}
+            if (state.userDB) {
+                const liTags = []
+                Object.values(state.userDB.music).forEach(music => { liTags.push(music.tags) })
+                const onlyUnique = (value, index, self) => {
+                    return self.indexOf(value) === index
+                }
+                const flatted = liTags.flat().sort()
+                const uniqueTags = flatted.filter(onlyUnique)
+                uniqueTags.forEach(tag => { occurences[tag] = flatted.lastIndexOf(tag) + 1 - flatted.indexOf(tag) })
+            }
+            return occurences
         },
     },
     mutations: {
