@@ -27,6 +27,12 @@
           <v-list-item @click="downloadJSON">
             <v-list-item-title>Download User Data</v-list-item-title>
           </v-list-item>
+          <v-list-item @click="nameAndTagAll">
+            <v-list-item-title>name and tag all musics</v-list-item-title>
+          </v-list-item>
+          <v-list-item @click="addBandsTag">
+            <v-list-item-title>addBandsTag</v-list-item-title>
+          </v-list-item>
         </v-list>
       </v-menu>
     </v-app-bar>
@@ -42,6 +48,8 @@
 </template>
 
 <script>
+import { submitMusic } from '@/sharedJS/submitMusic'
+
 export default {
     data() {
         return {
@@ -58,6 +66,57 @@ export default {
             dlAnchorElem.setAttribute('href', dataStr)
             dlAnchorElem.setAttribute('download', 'userDB.json')
             dlAnchorElem.click()
+        },
+        async nameAndTagAll() {
+            const toCompute = []
+            Object.values(this.$store.getters['userDB/music']).forEach(music => {
+                if (!music.tags) {
+                    music.tags = []
+                    console.log('up music')
+                }
+            })
+            Object.values(this.$store.getters['userDB/music']).forEach(music => {
+                if (music.ytId && (music.id === music.name || music.name === '' || music.tags.length === 0)) {
+                    const url = 'https://www.googleapis.com/youtube/v3/videos' +
+                        `?part=snippet&id=${music.ytId}&key=${process.env.API_KEY}`
+
+                    toCompute.push(async () => {
+                        try {
+                            const ytInfo = (await this.$http.get(url)).data.items[0].snippet
+                            const title = ytInfo.title
+                            const tags = ytInfo.tags
+                            const copieMusic = { ...music }
+                            copieMusic.name = title
+                            copieMusic.tags = [...music.tags].concat(tags)
+                            await submitMusic.call(this, copieMusic)
+                        } catch (e) {
+                            console.log(await this.$http.get(url))
+                            console.log('the yt video does not exist anymore')
+                            await this.$store.dispatch('userDB/deleteMusic', music.id)
+                        }
+                    })
+                }
+            })
+            console.log('launch comput on ' + toCompute.length)
+            await Promise.all(toCompute.map(f => f()))
+            console.log('end of updates')
+            this.$store.dispatch('userDB/saveUserDB')
+            console.log('db saved')
+        },
+        addBandsTag() {
+            Object.values(this.$store.getters['userDB/music']).forEach(music => {
+                const match = music.name.match(/(.*) - (.*)/)
+                if (match && !music.tags.includes(match[1])) {
+                    const bandTag = match[1]
+                    console.log(match, bandTag)
+                    const copieMusic = { ...music }
+                    copieMusic.tags = [...music.tags]
+                    copieMusic.tags.push(bandTag)
+                    submitMusic.call(this, copieMusic)
+                }
+            })
+            console.log('end of updates')
+            this.$store.dispatch('userDB/saveUserDB')
         },
     },
 }

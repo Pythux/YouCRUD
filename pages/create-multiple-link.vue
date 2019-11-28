@@ -86,9 +86,7 @@ export default {
                 console.log('eval extractFunction should return a list of urls')
             } else {
                 console.log(`add ${musics.length} urls ...`)
-                console.log(musics)
                 musics.forEach(urlStr => {
-                    console.log(urlStr)
                     const obj = {}
                     const url = new URL(urlStr)
                     if (urlStr.startsWith('https://www.youtube.com/watch')) {

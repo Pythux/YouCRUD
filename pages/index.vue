@@ -52,7 +52,7 @@
       Play next random
     </v-btn>
     <v-row>
-      <template v-for="tag in $store.getters['userDB/tags']">
+      <!-- <template v-for="tag in $store.getters['userDB/tags']">
         <v-chip
           :key="tag"
           :outlined="!activTags[tag]"
@@ -61,7 +61,7 @@
         >
           {{ tag }}
         </v-chip>
-      </template>
+      </template> -->
     </v-row>
     <v-col cols="12">
       <v-text-field
@@ -178,15 +178,9 @@ export default {
                 const music = this.$store.getters['userDB/music'][index]
                 if (music.id === music.name || music.name === '') {
                     this.selected = music
-                    const url = 'https://www.googleapis.com/youtube/v3/videos' +
-                        `?part=snippet&id=${this.selected.ytId}&key=${process.env.API_KEY}`
-                    console.log((await this.$http.get(url)).data)
-                    // this.selected.name = (await this.$http.get(url)).data
                     break
                 }
             }
-            console.log('end of updates')
-            // this.$store.dispatch('userDB/saveUserDB')
         },
     },
 }
