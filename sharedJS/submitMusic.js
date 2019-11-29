@@ -14,6 +14,8 @@ export async function submitMusic(name, url, ytId, tags) {
     if (url || ytId) {
         const toCreate = { name }
         toCreate.tags = tags || []
+        toCreate.tags = toCreate.tags.filter(tag => ![null, undefined].includes(tag))
+
         if (ytId) {
             toCreate.ytId = ytId
         } else {
@@ -42,11 +44,11 @@ export async function submitMusic(name, url, ytId, tags) {
             await this.$store.commit('userDB/add_musics', { [key]: toCreate })
             if (updateId) {
                 await this.$http.delete('/music/' + updateId)
-                this.$store.commit('userDB/delete_music', updateId)
+                await this.$store.commit('userDB/delete_music', updateId)
                 obj.id = key
             }
         }
     } else {
-        console.log("no url or ytId, can't create/update")
+        console.error("no url or ytId, can't create/update")
     }
 }
