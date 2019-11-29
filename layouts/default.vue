@@ -28,10 +28,7 @@
             <v-list-item-title>Download User Data</v-list-item-title>
           </v-list-item>
           <v-list-item @click="nameAndTagAll">
-            <v-list-item-title>name and tag all musics</v-list-item-title>
-          </v-list-item>
-          <v-list-item @click="addBandsTag">
-            <v-list-item-title>addBandsTag</v-list-item-title>
+            <v-list-item-title>name and tag all unamed musics</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -70,13 +67,7 @@ export default {
         async nameAndTagAll() {
             const toCompute = []
             Object.values(this.$store.getters['userDB/music']).forEach(music => {
-                if (!music.tags) {
-                    music.tags = []
-                    console.log('up music')
-                }
-            })
-            Object.values(this.$store.getters['userDB/music']).forEach(music => {
-                if (music.ytId && (music.id === music.name || music.name === '' || music.tags.length === 0)) {
+                if (music.ytId && (music.id === music.name || music.name === '')) {
                     const url = 'https://www.googleapis.com/youtube/v3/videos' +
                         `?part=snippet&id=${music.ytId}&key=${process.env.API_KEY}`
 
@@ -101,7 +92,6 @@ export default {
             await Promise.all(toCompute.map(f => f()))
             console.log('end of updates')
             this.$store.dispatch('userDB/saveUserDB')
-            console.log('db saved')
         },
         addBandsTag() {
             Object.values(this.$store.getters['userDB/music']).forEach(music => {

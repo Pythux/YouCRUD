@@ -48,14 +48,15 @@
         </v-card-text>
       </v-card>
     </v-col>
-    <v-btn @click="changeMusic()">
+    <v-btn style="margin: 5px" @click="changeMusic()">
       Play next random
     </v-btn>
-    <v-btn @click="deleteTags()">
-      deleteTags
+    <v-spacer />
+    <v-btn style="margin: 5px" @click="deleteTags()">
+      Delete selected tags
     </v-btn>
     <v-row>
-      <template v-for="tag in displayedTags">
+      <template v-for="tag in $store.getters['userDB/tags']">
         <v-chip
           :key="tag"
           :outlined="!activTags[tag]"
@@ -112,8 +113,6 @@ export default {
             isInfo: true,
             arrayActionTxt: { true: 'Info', false: 'Update' },
             activTags: {},
-            displayedTags: [...this.$store.getters['userDB/tags']]
-                .filter(tag => this.$store.getters['userDB/occurencesOfTags'][tag] < 2),
         }
     },
     computed: {
@@ -150,13 +149,15 @@ export default {
         },
         async deleteTags() {
             const toCompute = []
-            const tagsToDelete = [undefined]
+            const tagsToDelete = []
             for (const key in this.activTags) {
                 if (this.activTags[key]) {
                     tagsToDelete.push(key)
                 }
             }
+            // tagsToDelete = [...this.$store.getters['userDB/tags']].filter(tag => !tagsToDelete.includes(tag))
             console.log(tagsToDelete)
+            // console.log(tagsToDelete)
             Object.values(this.$store.getters['userDB/music']).forEach(music => {
                 const copieMusic = { ...music }
                 copieMusic.tags = [...music.tags]
@@ -166,7 +167,7 @@ export default {
                     }
                 })
                 if (copieMusic.tags.length !== music.tags.length) {
-                    console.log(music.tags.length, copieMusic.tags.length)
+                    console.log(music.tags.length - copieMusic.tags.length)
                     toCompute.push(async () => { await submitMusic.call(this, copieMusic) })
                 }
             })
@@ -186,6 +187,39 @@ export default {
             this.selected = newObj
         },
         changeMusic() {
+            const types = [
+                'Disco',
+                'Blues',
+                'Funk',
+                'Jazz',
+                'Metal',
+                'Pop',
+                'Punk',
+                'Rap',
+                "Rock 'n' roll",
+                'Rock',
+                'roll',
+                'Reggae',
+                'Afro',
+                'Raï',
+                'Ska',
+                'Gospel',
+                'Soul',
+                'Kompa',
+                'Classique',
+                'RnB',
+                'Electro',
+                'K-pop',
+                'chill',
+                'tech',
+            ]
+            function isInFamilly(tag) {
+                return types.reduce((acc, t) => acc || tag.toLowerCase().includes(t.toLowerCase()), false)
+            }
+            console.log(this.$store.getters['userDB/music'].map(v => {
+                return v.tags.reduce((acc, t) => acc || isInFamilly(t), false)
+            }).filter(x => x).length)
+
             function getRandomInt(max) {
                 return Math.floor(Math.random() * Math.floor(max))
             }
