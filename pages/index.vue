@@ -187,39 +187,6 @@ export default {
             this.selected = newObj
         },
         changeMusic() {
-            const types = [
-                'Disco',
-                'Blues',
-                'Funk',
-                'Jazz',
-                'Metal',
-                'Pop',
-                'Punk',
-                'Rap',
-                "Rock 'n' roll",
-                'Rock',
-                'roll',
-                'Reggae',
-                'Afro',
-                'Raï',
-                'Ska',
-                'Gospel',
-                'Soul',
-                'Kompa',
-                'Classique',
-                'RnB',
-                'Electro',
-                'K-pop',
-                'chill',
-                'tech',
-            ]
-            function isInFamilly(tag) {
-                return types.reduce((acc, t) => acc || tag.toLowerCase().includes(t.toLowerCase()), false)
-            }
-            console.log(this.$store.getters['userDB/music'].map(v => {
-                return v.tags.reduce((acc, t) => acc || isInFamilly(t), false)
-            }).filter(x => x).length)
-
             function getRandomInt(max) {
                 return Math.floor(Math.random() * Math.floor(max))
             }
