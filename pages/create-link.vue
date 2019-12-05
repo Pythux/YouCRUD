@@ -23,6 +23,17 @@
             <v-text-field v-model="name" label="Name" />
             <v-text-field v-model="url" label="URL:" />
             <AutocompleteTags v-model="tags" />
+            <v-row>
+              <template v-for="tag in apiTags">
+                <v-chip
+                  :key="tag"
+                  :outlined="true"
+                  style="margin: 5px"
+                >
+                  {{ tag }}
+                </v-chip>
+              </template>
+            </v-row>
           </v-card-text>
           <v-card-actions>
             <v-btn type="submit">
@@ -48,6 +59,7 @@ export default {
             name: '',
             url: '',
             tags: [],
+            apiTags: [],
         }
     },
     computed: {
@@ -62,7 +74,30 @@ export default {
             return null
         },
     },
+    watch: {
+        ytId() {
+            if (this.ytId) {
+                this.ytAPI()
+            }
+        },
+    },
     methods: {
+        async ytAPI() {
+            const url = 'https://www.googleapis.com/youtube/v3/videos' +
+                `?part=snippet&id=${this.ytId}&key=${process.env.API_KEY}`
+
+            try {
+                const ytInfo = (await this.$http.get(url)).data.items[0].snippet
+                const title = ytInfo.title
+                const tags = ytInfo.tags
+                this.name = title
+                this.apiTags = tags
+                this.tags = tags.filter(tag => this.$store.getters['userDB/tags'].includes(tag))
+            } catch (e) {
+                console.log(await this.$http.get(url))
+                console.log('the yt video does not exist')
+            }
+        },
         submit() {
             submitMusic.call(this, this.name, this.url, this.ytId, this.tags)
             this.name = ''

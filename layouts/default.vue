@@ -27,8 +27,8 @@
           <v-list-item @click="downloadJSON">
             <v-list-item-title>Download User Data</v-list-item-title>
           </v-list-item>
-          <v-list-item @click="nameAndTagAll">
-            <v-list-item-title>name and tag all unamed musics</v-list-item-title>
+          <v-list-item @click="$router.push('/tags')">
+            <v-list-item-title>Tags managements</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -64,57 +64,28 @@ export default {
             dlAnchorElem.setAttribute('download', 'userDB.json')
             dlAnchorElem.click()
         },
-        async nameAndTagAll() {
-            const toCompute = []
-            Object.values(this.$store.getters['userDB/music']).forEach(music => {
-                if (music.ytId && (music.id === music.name || music.name === '')) {
-                    const url = 'https://www.googleapis.com/youtube/v3/videos' +
-                        `?part=snippet&id=${music.ytId}&key=${process.env.API_KEY}`
-
-                    toCompute.push(async () => {
-                        try {
-                            const ytInfo = (await this.$http.get(url)).data.items[0].snippet
-                            const title = ytInfo.title
-                            const tags = ytInfo.tags
-                            const copieMusic = { ...music }
-                            copieMusic.name = title
-                            copieMusic.tags = [...music.tags].concat(tags)
-                            await submitMusic.call(this, copieMusic)
-                        } catch (e) {
-                            console.log(await this.$http.get(url))
-                            console.log('the yt video does not exist anymore')
-                            await this.$store.dispatch('userDB/deleteMusic', music.id)
-                        }
-                    })
-                }
-            })
-            console.log('launch comput on ' + toCompute.length)
-            await Promise.all(toCompute.map(f => f()))
-            console.log('end of updates')
-            this.$store.dispatch('userDB/saveUserDB')
-        },
-        addBandsTag() {
-            Object.values(this.$store.getters['userDB/music']).forEach(music => {
-                const match = music.name.match(/(.*) - (.*)/)
-                if (match && !music.tags.includes(match[1])) {
-                    const bandTag = match[1]
-                    console.log(match, bandTag)
-                    const copieMusic = { ...music }
-                    copieMusic.tags = [...music.tags]
-                    copieMusic.tags.push(bandTag)
-                    submitMusic.call(this, copieMusic)
-                }
-            })
-            console.log('end of updates')
-            this.$store.dispatch('userDB/saveUserDB')
-        },
+        // addBandsTag() {  // to use for bands sorting
+        //     Object.values(this.$store.getters['userDB/music']).forEach(music => {
+        //         const match = music.name.match(/(.*) - (.*)/)
+        //         if (match && !music.tags.includes(match[1])) {
+        //             const bandTag = match[1]
+        //             console.log(match, bandTag)
+        //             const copieMusic = { ...music }
+        //             copieMusic.tags = [...music.tags]
+        //             copieMusic.tags.push(bandTag)
+        //             submitMusic.call(this, copieMusic)
+        //         }
+        //     })
+        //     console.log('end of updates')
+        //     this.$store.dispatch('userDB/saveUserDB')
+        // },
     },
 }
 </script>
 
 <style lang="css">
 .v-application a {
-    text-decoration: none;
-    color: rgb(226, 225, 220);
+    text-decoration: inherit;
+    color: inherit !important;
 }
 </style>

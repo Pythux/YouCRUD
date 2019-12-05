@@ -52,9 +52,6 @@
       Play next random
     </v-btn>
     <v-spacer />
-    <v-btn style="margin: 5px" @click="deleteTags()">
-      Delete selected tags
-    </v-btn>
     <v-row>
       <template v-for="tag in $store.getters['userDB/tags']">
         <v-chip
@@ -146,35 +143,6 @@ export default {
     methods: {
         switchActiveTag(tag) {
             this.activTags = Object.assign({}, this.activTags, { [tag]: !this.activTags[tag] })
-        },
-        async deleteTags() {
-            const toCompute = []
-            const tagsToDelete = []
-            for (const key in this.activTags) {
-                if (this.activTags[key]) {
-                    tagsToDelete.push(key)
-                }
-            }
-            // tagsToDelete = [...this.$store.getters['userDB/tags']].filter(tag => !tagsToDelete.includes(tag))
-            console.log(tagsToDelete)
-            // console.log(tagsToDelete)
-            Object.values(this.$store.getters['userDB/music']).forEach(music => {
-                const copieMusic = { ...music }
-                copieMusic.tags = [...music.tags]
-                tagsToDelete.forEach(tag => {
-                    if (copieMusic.tags.includes(tag)) {
-                        copieMusic.tags.splice(copieMusic.tags.indexOf(tag), 1)
-                    }
-                })
-                if (copieMusic.tags.length !== music.tags.length) {
-                    console.log(music.tags.length - copieMusic.tags.length)
-                    toCompute.push(async () => { await submitMusic.call(this, copieMusic) })
-                }
-            })
-            console.log('to compute: ' + toCompute.length)
-            await Promise.all(toCompute.map(f => f()))
-            console.log('done')
-            this.$store.dispatch('userDB/saveUserDB')
         },
         click(obj) {
             const newObj = { ...obj }
