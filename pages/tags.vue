@@ -11,7 +11,7 @@
         name and tag all unamed musics
       </v-btn>
       <v-btn style="margin: 5px" @click="fusionTags()">
-        Fusion selected tags
+        Fusion/Rename selected tags
       </v-btn>
     </v-row>
     <v-row v-if="fusion">
