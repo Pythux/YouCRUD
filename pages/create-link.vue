@@ -10,7 +10,7 @@
       />
     </v-col>
     <v-col xs="12" sm="8" md="6">
-      <v-card>
+      <v-card :loading="loading">
         <form @submit.prevent="submit">
           <v-card-title>
             Save a link:
@@ -60,6 +60,7 @@ export default {
             url: '',
             tags: [],
             apiTags: [],
+            loading: false,
         }
     },
     computed: {
@@ -98,11 +99,14 @@ export default {
                 console.log('the yt video does not exist')
             }
         },
-        submit() {
-            submitMusic.call(this, this.name, this.url, this.ytId, this.tags)
+        async submit() {
+            this.loading = true
+            await submitMusic.call(this, this.name, this.url, this.ytId, this.tags)
+            this.loading = false
             this.name = ''
             this.url = ''
             this.tags = []
+            this.apiTags = []
         },
     },
 }

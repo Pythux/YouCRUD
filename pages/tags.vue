@@ -1,14 +1,26 @@
 <template>
   <v-row>
-    <v-btn style="margin: 5px" @click="deleteTags('selected')">
-      Delete selected tags
-    </v-btn>
-    <v-btn style="margin: 5px" @click="deleteTags('unselected')">
-      Delete unselected tags
-    </v-btn>
-    <v-btn style="margin: 5px" @click="nameAndTagAll()">
-      name and tag all unamed musics
-    </v-btn>
+    <v-row justify="space-around">
+      <v-btn style="margin: 5px" @click="deleteTags('selected')">
+        Delete selected tags
+      </v-btn>
+      <v-btn style="margin: 5px" @click="deleteTags('unselected')">
+        Delete unselected tags
+      </v-btn>
+      <v-btn style="margin: 5px" @click="nameAndTagAll()">
+        name and tag all unamed musics
+      </v-btn>
+      <v-btn style="margin: 5px" @click="fusionTags()">
+        Fusion selected tags
+      </v-btn>
+    </v-row>
+    <v-row v-if="fusion">
+      <v-text-field v-model="fusionInput" :loading="fusionLoading" label="Tag name for the fusion" />
+      <v-btn @click="fusionTagsSubmit()">
+        Fusion
+      </v-btn>
+    </v-row>
+
     <v-row class="mt-5">
       <template v-for="tag in $store.getters['userDB/tags']">
         <v-chip
@@ -31,7 +43,21 @@ export default {
     data() {
         return {
             activTags: {},
+            fusion: false,
+            fusionInput: '',
+            fusionLoading: false,
         }
+    },
+    computed: {
+        activeTags() {
+            const activeTags = []
+            for (const key in this.activTags) {
+                if (this.activTags[key]) {
+                    activeTags.push(key)
+                }
+            }
+            return activeTags
+        },
     },
     methods: {
         switchActiveTag(tag) {
@@ -40,11 +66,7 @@ export default {
         async deleteTags(selection) {
             const toCompute = []
             let tagsToDelete = []
-            for (const key in this.activTags) {
-                if (this.activTags[key]) {
-                    tagsToDelete.push(key)
-                }
-            }
+            tagsToDelete = [...this.activeTags]
             if (selection === 'selected') {
             } else if (selection === 'unselected') {
                 // to delete unselected tags:
@@ -100,6 +122,33 @@ export default {
             await Promise.all(toCompute.map(f => f()))
             console.log('end of updates')
             this.$store.dispatch('userDB/saveUserDB')
+        },
+        fusionTags() {
+            this.fusion = !this.fusion
+            this.fusionLoading = false
+            this.fusionInput = this.activeTags.length > 0 ? this.activeTags.reduce((acc, tag) => acc + ' ' + tag) : ''
+        },
+        async fusionTagsSubmit() {
+            const tagToDeletes = this.activeTags.filter(tag => tag !== this.fusionInput)
+            this.fusionLoading = true
+            const toCompute = []
+            Object.values(this.$store.getters['userDB/music']).forEach(music => {
+                const newTags = music.tags.filter(tag => !this.activeTags.includes(tag))
+                if (newTags.length !== music.tags.length) {
+                    newTags.push(this.fusionInput)
+                    toCompute.push({ music, newTags })
+                }
+            })
+            await Promise.all(toCompute.map(async ({ music, newTags }) => {
+                // await new Promise(resolve => setTimeout(resolve, 10))
+                // console.log({ ...music, tags: newTags })
+                await submitMusic.call(this, { ...music, tags: newTags })
+            }))
+            console.log('end of fusionTags')
+            this.$store.dispatch('userDB/saveUserDB')
+            this.fusionLoading = false
+            this.fusion = false
+            tagToDeletes.forEach(tag => delete this.activTags[tag])
         },
     },
 }
