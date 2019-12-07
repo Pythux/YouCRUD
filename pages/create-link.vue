@@ -49,6 +49,7 @@
 <script>
 import AutocompleteTags from '@/components/autocompleteTags'
 import { submitMusic } from '@/sharedJS/submitMusic'
+import { getYtId } from '@/sharedJS/ytURL'
 
 export default {
     components: {
@@ -65,14 +66,13 @@ export default {
     },
     computed: {
         ytLink() {
-            return 'http://www.youtube.com/embed/' + this.ytId // + '?autoplay=1'
+            return 'http://www.youtube.com/embed/' + this.ytId + '?autoplay=1'
         },
         ytId() {
-            if (this.url.startsWith('https://www.youtube.com/watch')) {
-                const url = new URL(this.url)
-                return url.searchParams.get('v')
+            if (this.url) {
+                return getYtId(this.url)
             }
-            return null
+            return undefined
         },
     },
     watch: {

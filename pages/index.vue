@@ -91,6 +91,7 @@
 import YtPlayer from '@/components/YtPlayer'
 import AutocompleteTags from '@/components/autocompleteTags'
 import { submitMusic } from '@/sharedJS/submitMusic'
+import { getYtId } from '@/sharedJS/ytURL'
 
 export default {
     components: {
@@ -122,11 +123,24 @@ export default {
         otherActionTxt() {
             return this.arrayActionTxt[!this.isInfo]
         },
-        selectedURL() {
-            if (this.selected.ytId) {
-                return `https://www.youtube.com/watch?v=${this.selected.ytId}`
-            }
-            return this.selected.url
+        selectedURL: {
+            get() {
+                if (this.selected.ytId) {
+                    return `https://www.youtube.com/watch?v=${this.selected.ytId}`
+                }
+                return this.selected.url
+            },
+            set(newURL) {
+                const ytId = getYtId(newURL)
+                console.log('ytid:', ytId)
+                if (ytId) {
+                    delete this.selected.url
+                    this.selected.ytId = ytId
+                } else {
+                    delete this.selected.ytId
+                    this.selected.url = newURL
+                }
+            },
         },
         musicItems() {
             const liActivTags = Object.keys(this.activTags).filter(tag => this.activTags[tag])
