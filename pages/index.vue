@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <YtPlayer v-if="selected && selected.ytId" :yt-id="selected.ytId" @ended="changeMusic" />
+    <YtPlayer v-if="selected && selected.ytId" :yt-id="selected.ytId" @ended="changeMusic()" />
     <v-col v-else cols="12">
       <div style="height: 360px" />
     </v-col>
@@ -48,10 +48,12 @@
         </v-card-text>
       </v-card>
     </v-col>
+    <v-btn style="margin: 5px" @click="previousMusic()">
+      Previous
+    </v-btn>
     <v-btn style="margin: 5px" @click="changeMusic()">
       Play next random
     </v-btn>
-    <v-spacer />
     <v-row>
       <template v-for="tag in $store.getters['userDB/tags']">
         <v-chip
@@ -110,6 +112,7 @@ export default {
             isInfo: true,
             arrayActionTxt: { true: 'Info', false: 'Update' },
             activTags: {},
+            liPrevMusic: [],
         }
     },
     computed: {
@@ -140,6 +143,14 @@ export default {
             })
         },
     },
+    watch: {
+        selected(_, oldSelected) {
+            this.liPrevMusic.push(oldSelected)
+            if (this.liPrevMusic.length > 20) {
+                this.liPrevMusic.splice(0, 5)
+            }
+        },
+    },
     methods: {
         switchActiveTag(tag) {
             this.activTags = Object.assign({}, this.activTags, { [tag]: !this.activTags[tag] })
@@ -165,6 +176,10 @@ export default {
             } else {
                 this.selected = otherMusic[getRandomInt(otherMusic.length)]
             }
+        },
+        previousMusic() {
+            this.selected = this.liPrevMusic.pop()
+            this.liPrevMusic.pop()
         },
         submit() {
             submitMusic.call(this, this.selected)

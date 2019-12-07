@@ -3,7 +3,6 @@
     <!-- <div id="player" /> -->
     <iframe
       id="player"
-      :keys="ytId"
       type="text/html"
       width="940"
       height="360"
