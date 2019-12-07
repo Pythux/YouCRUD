@@ -6,11 +6,11 @@
       type="text/html"
       width="940"
       height="360"
-      :src="`http://www.youtube.com/embed/?enablejsapi=1`"
+      :src="`https://www.youtube.com/embed/?enablejsapi=1`"
       frameborder="0"
     />
 
-    <script src="http://www.youtube.com/player_api" />
+    <script src="https://www.youtube.com/player_api" />
 
     <script>
       // create youtube player

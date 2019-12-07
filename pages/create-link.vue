@@ -66,7 +66,7 @@ export default {
     },
     computed: {
         ytLink() {
-            return 'http://www.youtube.com/embed/' + this.ytId + '?autoplay=1'
+            return 'https://www.youtube.com/embed/' + this.ytId + '?autoplay=1'
         },
         ytId() {
             if (this.url) {
