@@ -192,6 +192,7 @@ export default {
                 newObj.name = ''
             }
             this.selected = newObj
+            window.scroll({ top: 0, behavior: 'smooth' })
         },
         changeMusic() {
             function getRandomInt(max) {
