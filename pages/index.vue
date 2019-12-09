@@ -33,9 +33,9 @@
               <v-btn type="submit" color="success" style="text-transform: none">
                 Update
               </v-btn>
-              <v-btn color="success" style="text-transform: none" @click="submitAndgoNextUndefined">
+              <!-- <v-btn color="success" style="text-transform: none" @click="submitAndgoNextUndefined">
                 Update an go next undefined
-              </v-btn>
+              </v-btn> -->
             </v-card-actions>
           </v-form>
           <template v-else>
@@ -69,7 +69,7 @@
     <v-col cols="12">
       <v-switch
         v-model="filterOnDone"
-        :label="`Filter Done: ${filterOnDone.toString()}`"
+        label="ToDo"
       />
       <v-text-field
         v-model="search"
@@ -210,6 +210,13 @@ export default {
         },
         async submit() {
             await submitMusic.call(this, this.selected)
+            for (const index in this.$store.getters['userDB/music']) {
+                const music = this.$store.getters['userDB/music'][index]
+                if (music.done === undefined) {
+                    this.selected = music
+                    break
+                }
+            }
         },
         deleteMusic(elem) {
             this.$store.dispatch('userDB/deleteMusic', elem.id)
@@ -219,7 +226,7 @@ export default {
             await submitMusic.call(this, this.selected)
             for (const index in this.$store.getters['userDB/music']) {
                 const music = this.$store.getters['userDB/music'][index]
-                if (music.id === music.name || music.name === '') {
+                if (music.id === music.name || music.name === '' || music.name === undefined) {
                     this.selected = music
                     break
                 }
