@@ -22,7 +22,7 @@
           <v-card-text>
             <v-text-field v-model="name" label="Name" />
             <v-text-field v-model="url" label="URL:" />
-            <AutocompleteTags v-model="tags" />
+            <AutocompleteTags v-model="tags" @submit="submit" />
             <v-row>
               <template v-for="tag in apiTags">
                 <v-chip

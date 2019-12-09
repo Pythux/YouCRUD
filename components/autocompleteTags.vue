@@ -21,7 +21,7 @@
         autocomplete="off"
         @input="updateTags($event)"
         @update:search-input="updateCurrentTag"
-        @keydown.enter.native.prevent="currentTag = ''"
+        @keydown.enter.native.prevent="enterAutocomplete()"
       />
       <v-text-field v-else v-model="tagToAdd" label="new Tag:" @keydown.enter.prevent="addNewTag()" />
     </v-col>
@@ -66,6 +66,12 @@ export default {
         },
         updateCurrentTag(tag) {
             this.currentTag = tag
+        },
+        enterAutocomplete() {
+            if (this.currentTag === '') {
+                this.$emit('submit')
+            }
+            this.currentTag = ''
         },
     },
 }

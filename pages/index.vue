@@ -24,7 +24,7 @@
           <v-form v-if="!isInfo" @submit.prevent="submit">
             <v-text-field v-model="selected.name" label="Name" />
             <v-text-field v-model="selectedURL" label="URL:" />
-            <AutocompleteTags v-model="selected.tags" />
+            <AutocompleteTags v-model="selected.tags" @submit="submit" />
             <v-card-actions>
               <v-btn color="red darken-3" style="text-transform: none" @click="deleteMusic(selected)">
                 Delete
