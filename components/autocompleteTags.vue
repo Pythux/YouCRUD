@@ -1,20 +1,31 @@
 <template lang="html">
-  <v-autocomplete
-    :items="existingTags"
-    :search-input="currentTag"
-    :no-data-text="`press enter to add the tag: ${currentTag}`"
-    outlined
-    dense
-    chips
-    small-chips
-    label="Tags"
-    multiple
-    autocomplete="off"
-    :value="value"
-    @input="$emit('input', $event)"
-    @update:search-input="updateCurrentTag"
-    @keydown.enter.native.prevent="addNewTag"
-  />
+  <v-row>
+    <!-- <v-col cols="2">
+      <v-btn color="green" @click="newTag = !newTag">
+        <plus-circle-icon />
+      </v-btn>
+    </v-col> -->
+    <v-col cols="10">
+      <v-autocomplete
+        v-if="!newTag"
+        :items="existingTags"
+        :search-input="currentTag"
+        :no-data-text="`press enter to add the tag: ${currentTag}`"
+        outlined
+        dense
+        chips
+        small-chips
+        label="Tags"
+        multiple
+        autocomplete="off"
+        :value="value"
+        @input="$emit('input', $event)"
+        @update:search-input="updateCurrentTag"
+        @keydown.enter.native.prevent="currentTag = ''"
+      />
+      <v-text-field v-else />
+    </v-col>
+  </v-row>
 </template>
 
 <script>
@@ -26,6 +37,7 @@ export default {
         return {
             currentTag: '',
             addedTags: [],
+            newTag: false,
         }
     },
     computed: {
