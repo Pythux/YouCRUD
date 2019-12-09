@@ -93,7 +93,7 @@ export default {
                 const tags = ytInfo.tags
                 this.name = title
                 this.apiTags = tags
-                this.tags = tags.filter(tag => this.$store.getters['userDB/tags'].includes(tag))
+                // this.tags = tags.filter(tag => this.$store.getters['userDB/tags'].includes(tag))
             } catch (e) {
                 console.log(await this.$http.get(url))
                 console.log('the yt video does not exist')

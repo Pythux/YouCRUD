@@ -1,17 +1,20 @@
 <template>
   <v-row>
     <v-row justify="space-around">
-      <v-btn style="margin: 5px" @click="deleteTags('selected')">
+      <v-btn style="margin: 5px;text-transform: none" @click="deleteTags('selected')">
         Delete selected tags
       </v-btn>
-      <v-btn style="margin: 5px" @click="deleteTags('unselected')">
+      <v-btn style="margin: 5px;text-transform: none" @click="deleteTags('unselected')">
         Delete unselected tags
       </v-btn>
-      <v-btn style="margin: 5px" @click="nameAndTagAll()">
+      <v-btn style="margin: 5px;text-transform: none" @click="nameAndTagAll()">
         name and tag all unamed musics
       </v-btn>
-      <v-btn style="margin: 5px" @click="fusionTags()">
+      <v-btn style="margin: 5px;text-transform: none" @click="fusionTags()">
         Fusion/Rename selected tags
+      </v-btn>
+      <v-btn style="margin: 5px;text-transform: none" @click="noUndefinedTags()">
+        noUndefinedTags
       </v-btn>
     </v-row>
     <v-row v-if="fusion">
@@ -62,6 +65,18 @@ export default {
     methods: {
         switchActiveTag(tag) {
             this.activTags = Object.assign({}, this.activTags, { [tag]: !this.activTags[tag] })
+        },
+        async noUndefinedTags() {
+            const toCompute = []
+            console.log('start')
+            Object.values(this.$store.getters['userDB/music']).forEach(music => {
+                if (music.tags === undefined || !Array.isArray(music.tags)) {
+                    console.log(music)
+                }
+            })
+            console.log('done')
+            await Promise.all(toCompute.map(f => f + 1))
+            this.$store.dispatch('userDB/saveUserDB')
         },
         async deleteTags(selection) {
             const toCompute = []
