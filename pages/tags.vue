@@ -71,14 +71,13 @@ export default {
             console.log('start')
             Object.values(this.$store.getters['userDB/music']).forEach(music => {
                 if (music.tags === undefined) {
-                    console.log(music)
-                }
-                if (music.ytId === 'lVL-zZnD3VU') {
-                    console.log(music)
+                    toCompute.push(music)
                 }
             })
-            console.log('done')
-            await Promise.all(toCompute.map(f => f + 1))
+            await Promise.all(toCompute.map(async music => {
+                music.tags = []
+                await submitMusic.call(this, music)
+            }))
             this.$store.dispatch('userDB/saveUserDB')
         },
         async deleteTags(selection) {

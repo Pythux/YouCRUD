@@ -79,6 +79,7 @@
         hide-details
       />
       <v-data-table
+        style="cursor: pointer;"
         :headers="headers"
         disable-sort
         :search="search"
@@ -209,6 +210,11 @@ export default {
             this.liPrevMusic.pop()
         },
         async submit() {
+            console.log(this.selected.tags)
+            if (!(this.selected.tags && this.selected.tags.length > 0)) {
+                alert('no tags')
+                return
+            }
             await submitMusic.call(this, this.selected)
             for (const index in this.$store.getters['userDB/music']) {
                 const music = this.$store.getters['userDB/music'][index]

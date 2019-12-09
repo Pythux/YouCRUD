@@ -8,9 +8,10 @@
     <v-col cols="10">
       <v-autocomplete
         v-if="!newTag"
+        :value="selectedTags"
         :items="existingTags"
         :search-input="currentTag"
-        :no-data-text="`press enter to add the tag: ${currentTag}`"
+        no-data-text="click on the '+' button add a tag"
         outlined
         dense
         chips
@@ -18,8 +19,7 @@
         label="Tags"
         multiple
         autocomplete="off"
-        :value="value"
-        @input="$emit('input', $event)"
+        @input="updateTags($event)"
         @update:search-input="updateCurrentTag"
         @keydown.enter.native.prevent="currentTag = ''"
       />
@@ -35,6 +35,7 @@ export default {
     },
     data() {
         return {
+            selectedTags: [],
             currentTag: '',
             addedTags: [],
             newTag: false,
@@ -46,23 +47,24 @@ export default {
             return this.addedTags.concat(this.$store.getters['userDB/tags'])
         },
     },
+    watch: {
+        value(value) {
+            console.log(value)
+            this.selectedTags = value
+        },
+    },
     methods: {
+        updateTags(tags) {
+            this.selectedTags = tags
+            this.$emit('input', this.selectedTags)
+        },
         addNewTag() {
-            console.log('yo')
             this.addedTags.push(this.tagToAdd)
-            this.value.push(this.tagToAdd)
+            this.selectedTags.push(this.tagToAdd)
+            this.updateTags(this.selectedTags)
             this.tagToAdd = ''
             this.newTag = false
         },
-        // addNewTag() {
-        //     if (!this.existingTags.includes(this.currentTag)) {
-        //         this.addedTags.push(this.currentTag)
-        //         this.value.push(this.currentTag)
-        //         this.currentTag = ''
-        //     } else {
-        //         this.currentTag = ''
-        //     }
-        // },
         updateCurrentTag(tag) {
             this.currentTag = tag
         },
