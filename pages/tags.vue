@@ -70,7 +70,10 @@ export default {
             const toCompute = []
             console.log('start')
             Object.values(this.$store.getters['userDB/music']).forEach(music => {
-                if (music.tags === undefined || !Array.isArray(music.tags)) {
+                if (music.tags === undefined) {
+                    console.log(music)
+                }
+                if (music.ytId === 'lVL-zZnD3VU') {
                     console.log(music)
                 }
             })

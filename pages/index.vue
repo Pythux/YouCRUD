@@ -67,6 +67,10 @@
       </template>
     </v-row>
     <v-col cols="12">
+      <v-switch
+        v-model="filterOnDone"
+        :label="`Filter Done: ${filterOnDone.toString()}`"
+      />
       <v-text-field
         v-model="search"
         append-icon="mdi-magnify"
@@ -80,7 +84,7 @@
         :search="search"
         :items="musicItems"
         :items-per-page="15"
-        class="elevation-1"
+        class="elevation-2"
         @click:row="click"
       />
     </v-col>
@@ -114,6 +118,7 @@ export default {
             arrayActionTxt: { true: 'Info', false: 'Update' },
             activTags: {},
             liPrevMusic: [],
+            filterOnDone: false,
         }
     },
     computed: {
@@ -145,11 +150,19 @@ export default {
         musicItems() {
             const liActivTags = Object.keys(this.activTags).filter(tag => this.activTags[tag])
             if (liActivTags.length === 0) {
-                return this.$store.getters['userDB/music']
+                return this.$store.getters['userDB/music'].filter(music => {
+                    if (this.filterOnDone) {
+                        return !music.done
+                    }
+                    return true
+                })
             }
             return this.$store.getters['userDB/music'].filter(music => {
                 for (const tagIndex in music.tags) {
                     if (liActivTags.includes(music.tags[tagIndex])) {
+                        if (this.filterOnDone) {
+                            return !music.done
+                        }
                         return true
                     }
                 }
@@ -195,8 +208,8 @@ export default {
             this.selected = this.liPrevMusic.pop()
             this.liPrevMusic.pop()
         },
-        submit() {
-            submitMusic.call(this, this.selected)
+        async submit() {
+            await submitMusic.call(this, this.selected)
         },
         deleteMusic(elem) {
             this.$store.dispatch('userDB/deleteMusic', elem.id)

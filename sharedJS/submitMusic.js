@@ -13,6 +13,7 @@ export async function submitMusic(name, url, ytId, tags) {
 
     if (url || ytId) {
         const toCreate = { name }
+        toCreate.done = true
         toCreate.tags = tags || []
         toCreate.tags = toCreate.tags.filter(tag => ![null, undefined].includes(tag))
 
