@@ -74,10 +74,12 @@ export default {
                     toCompute.push(music)
                 }
             })
+            console.log('to compute')
             await Promise.all(toCompute.map(async music => {
                 music.tags = []
                 await submitMusic.call(this, music)
             }))
+            console.log('done')
             this.$store.dispatch('userDB/saveUserDB')
         },
         async deleteTags(selection) {

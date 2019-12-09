@@ -49,7 +49,6 @@ export default {
     },
     watch: {
         value(value) {
-            console.log(value)
             this.selectedTags = value
         },
     },
