@@ -8,7 +8,7 @@
       <div style="height: 360px" />
     </v-col>
 
-    <v-col v-if="selected" xs="12" sm="12" md="3" lg="5">
+    <v-col v-if="selected" cols="12" lg="8" xl="6">
       <v-card class="elevation-1">
         <v-toolbar color="primary" dark flat>
           <v-toolbar-title>{{ actionTxt }}:</v-toolbar-title>
@@ -36,9 +36,6 @@
               <v-btn type="submit" color="success" style="text-transform: none">
                 Update
               </v-btn>
-              <!-- <v-btn color="success" style="text-transform: none" @click="submitAndgoNextUndefined">
-                Update an go next undefined
-              </v-btn> -->
             </v-card-actions>
           </v-form>
           <template v-else>
@@ -51,12 +48,15 @@
         </v-card-text>
       </v-card>
     </v-col>
-    <v-btn style="margin: 5px" @click="previousMusic()">
-      Previous
-    </v-btn>
-    <v-btn style="margin: 5px" @click="changeMusic()">
-      Play next random
-    </v-btn>
+    <v-col cols="12">
+      <v-btn style="margin: 5px" @click="previousMusic()">
+        Previous
+      </v-btn>
+      <v-btn style="margin: 5px" @click="changeMusic()">
+        Play next random
+      </v-btn>
+    </v-col>
+
     <v-row>
       <template v-for="tag in $store.getters['userDB/tags']">
         <v-chip
@@ -181,6 +181,9 @@ export default {
                 this.liPrevMusic.splice(0, 5)
             }
         },
+    },
+    mounted() {
+        this.changeMusic()
     },
     methods: {
         switchActiveTag(tag) {

@@ -6,7 +6,7 @@
       type="text/html"
       width="940"
       height="360"
-      :src="`https://www.youtube.com/embed/?enablejsapi=1`"
+      src="https://www.youtube.com/embed/?enablejsapi=1"
       frameborder="0"
     />
 
