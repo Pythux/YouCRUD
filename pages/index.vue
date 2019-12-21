@@ -1,6 +1,9 @@
 <template>
-  <v-row>
-    <YtPlayer v-if="selected && selected.ytId" :yt-id="selected.ytId" @ended="changeMusic()" />
+  <v-row justify="center">
+    <v-row v-if="selected && selected.ytId" justify="center">
+      <YtPlayer :yt-id="selected.ytId" @ended="changeMusic()" />
+    </v-row>
+
     <v-col v-else cols="12">
       <div style="height: 360px" />
     </v-col>

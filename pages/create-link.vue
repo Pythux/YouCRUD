@@ -1,6 +1,6 @@
 <template lang="html">
   <v-row justify="center" class="yolo">
-    <v-col v-if="ytId" col="12">
+    <v-row v-if="ytId" justify="center">
       <iframe
         type="text/html"
         width="640"
@@ -8,7 +8,8 @@
         :src="ytLink"
         frameborder="0"
       />
-    </v-col>
+    </v-row>
+
     <v-col xs="12" sm="8" md="6">
       <v-card :loading="loading">
         <form @submit.prevent="submit">
@@ -21,7 +22,7 @@
           </v-card-title>
           <v-card-text>
             <v-text-field v-model="name" label="Name" />
-            <v-text-field v-model="url" label="URL:" />
+            <v-text-field v-model="url" label="URL:" :error-messages="errorAlreadyExist" />
             <AutocompleteTags v-model="tags" @submit="submit" />
             <v-row>
               <template v-for="tag in apiTags">
@@ -62,11 +63,12 @@ export default {
             tags: [],
             apiTags: [],
             loading: false,
+            errorAlreadyExist: '',
         }
     },
     computed: {
         ytLink() {
-            return 'https://www.youtube.com/embed/' + this.ytId + '?autoplay=1'
+            return 'https://www.youtube.com/embed/' + this.ytId // + '?autoplay=1'
         },
         ytId() {
             if (this.url) {
@@ -79,6 +81,7 @@ export default {
         ytId() {
             if (this.ytId) {
                 this.ytAPI()
+                this.doesAlreadyExist()
             }
         },
     },
@@ -107,6 +110,15 @@ export default {
             this.url = ''
             this.tags = []
             this.apiTags = []
+        },
+        doesAlreadyExist() {
+            this.errorAlreadyExist = ''
+            for (const musicId in this.$store.getters['userDB/music']) {
+                if (this.$store.getters['userDB/music'][musicId].ytId === this.ytId) {
+                    this.errorAlreadyExist = 'this music already exist'
+                    break
+                }
+            }
         },
     },
     notifications: {
