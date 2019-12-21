@@ -109,5 +109,11 @@ export default {
             this.apiTags = []
         },
     },
+    notifications: {
+        alreadyExist: {
+            title: 'Music already exist',
+            type: 'info',
+        },
+    },
 }
 </script>

@@ -13,7 +13,6 @@ export async function submitMusic(name, url, ytId, tags) {
 
     if (url || ytId) {
         const toCreate = { name }
-        // toCreate.done = true
         toCreate.tags = tags || []
         toCreate.tags = toCreate.tags.filter(tag => ![null, undefined].includes(tag))
 
@@ -39,7 +38,9 @@ export async function submitMusic(name, url, ytId, tags) {
 
         if (alreadyExist) {
             console.log('alreadyExist')
-            alert('this musique is already in the base')
+            if (this.alreadyExist) {
+                this.alreadyExist({ message: alreadyExist.name })
+            }
             console.log(alreadyExist)
         } else {
             const key = (await this.$http.post('/music', toCreate)).data.name
