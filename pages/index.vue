@@ -49,12 +49,14 @@
       </v-card>
     </v-col>
     <v-col cols="12">
-      <v-btn style="margin: 5px" @click="previousMusic()">
-        Previous
-      </v-btn>
-      <v-btn style="margin: 5px" @click="changeMusic()">
-        Play next random
-      </v-btn>
+      <v-row justify="center">
+        <v-btn style="margin: 5px" @click="previousMusic()">
+          Previous
+        </v-btn>
+        <v-btn style="margin: 5px" @click="changeMusic()">
+          Play next random
+        </v-btn>
+      </v-row>
     </v-col>
 
     <v-row>
