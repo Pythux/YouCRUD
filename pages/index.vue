@@ -219,7 +219,6 @@ export default {
             this.liPrevMusic.pop()
         },
         async submit() {
-            console.log(this.selected.tags)
             if (!(this.selected.tags && this.selected.tags.length > 0)) {
                 alert('no tags')
                 return
