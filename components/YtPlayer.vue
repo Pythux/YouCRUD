@@ -1,25 +1,10 @@
 <template lang="html">
-  <div>
-    <!-- <div id="player" /> -->
-    <iframe
-      id="player"
-      type="text/html"
-      width="940"
-      height="360"
-      src="https://www.youtube.com/embed/?enablejsapi=1"
-      frameborder="0"
-    />
-
-    <script src="https://www.youtube.com/player_api" />
-
-    <script>
-      // create youtube player
-      var player;
-    </script>
-  </div>
+  <div id="video-player" />
 </template>
 
 <script>
+import YouTubePlayer from 'youtube-player'
+
 export default {
     props: {
         ytId: {
@@ -27,36 +12,26 @@ export default {
             required: true,
         },
     },
+    data() {
+        return {
+            player: undefined,
+        }
+    },
     watch: {
         ytId() {
-            player.loadVideoById(this.ytId) // eslint-disable-line no-undef
+            this.player.loadVideoById(this.ytId)
+            this.player.playVideo()
         },
     },
     mounted() {
-        window.onYouTubePlayerAPIReady = () => {
-            player = new YT.Player('player', { // eslint-disable-line no-undef
-                // height: '360',
-                // width: '640',
-                // videoId: this.ytId,
-                events: {
-                    'onReady': this.onPlayerReady,
-                    'onStateChange': this.onPlayerStateChange,
-                },
-            })
-        }
-    },
-    methods: {
-        // autoplay video
-        onPlayerReady(event) {
-            player.loadVideoById(this.ytId) // eslint-disable-line no-undef
-            event.target.playVideo()
-        },
-        // when video ends
-        onPlayerStateChange(event) {
+        this.player = YouTubePlayer('video-player')
+        this.player.on('stateChange', event => {
             if (event.data === 0) {
                 this.$emit('ended')
             }
-        },
+        })
+        this.player.loadVideoById(this.ytId)
+        this.player.playVideo()
     },
 }
 </script>

@@ -18,7 +18,8 @@
         "mini-toastr": "^0.8.1",
         "nuxt": "^2.0.0",
         "vue-feather-icons": "^5.0.0",
-        "vue-notifications": "^1.0.2"
+        "vue-notifications": "^1.0.2",
+        "youtube-player": "^5.5.2"
     },
     "devDependencies": {
         "@nuxtjs/eslint-config": "^1.1.2",
