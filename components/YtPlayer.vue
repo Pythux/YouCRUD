@@ -24,7 +24,11 @@ export default {
         },
     },
     mounted() {
-        this.player = YouTubePlayer('video-player')
+        let width = 640
+        if (window.innerWidth < width) {
+            width = window.innerWidth
+        }
+        this.player = YouTubePlayer('video-player', { width, height: Math.floor(width * 0.6) })
         this.player.on('stateChange', event => {
             if (event.data === 0) {
                 this.$emit('ended')
