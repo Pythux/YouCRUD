@@ -70,6 +70,10 @@ export default {
             console.log('add: ', musics)
             state.userDB.music = Object.assign({}, state.userDB.music, musics)
         },
+        update_music(state, music) {
+            console.log('updated: ', music)
+            state.userDB.music = Object.assign({}, state.userDB.music, music)
+        },
         delete_music(state, key) {
             console.log('delete_music: ', key)
             delete state.userDB.music[key]
@@ -82,46 +86,11 @@ export default {
                 .then(() => { commit('delete_music', key) })
         },
         setSaveUserDB({ dispatch, commit, state }, userDB) {
-            commit('set_userDB', userDB)
             dispatch('saveUserDB')
         },
-        saveUserDB({ state }) {
-            localStorage.setItem('userDB', JSON.stringify(state.userDB))
-        },
-        async check_stored_userDB({ commit, dispatch }) {
-            const localDB = localStorage.getItem('userDB')
-            if (localDB) {
-                await commit('set_userDB', JSON.parse(localDB))
-                dispatch('check_update_userDB') // don't wait the updates
-            } else {
-                http.get('/').then(response => dispatch('setSaveUserDB', response.data))
-            }
-        },
-        async check_update_userDB({ dispatch, commit, state }) {
-            let update = false
-            const serverUserDB = (await http.get('/music?shallow=true')).data
-            const musicToAdd = {}
-
-            for (const key in serverUserDB) {
-                if (!(key in state.userDB.music)) {
-                    update = true
-                    const music = (await http.get(`/music/${key}`)).data
-                    musicToAdd[key] = music
-                }
-            }
-            if (update) {
-                await commit('add_musics', musicToAdd)
-            }
-
-            for (const key in state.userDB.music) {
-                if (!(key in serverUserDB)) {
-                    update = true
-                    await commit('delete_music', key)
-                }
-            }
-            if (update) {
-                await dispatch('saveUserDB')
-            }
+        async getUserDB({ commit, dispatch }) {
+            const getUserDB = await http.get('/')
+            await commit('set_userDB', getUserDB.data)
         },
     },
 }

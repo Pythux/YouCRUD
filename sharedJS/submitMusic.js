@@ -1,6 +1,6 @@
 
 export async function submitMusic(name, url, ytId, tags) {
-    let updateId
+    let haveAnId
     let obj
     if (arguments.length === 1) {
         obj = arguments[0]
@@ -8,7 +8,7 @@ export async function submitMusic(name, url, ytId, tags) {
         url = obj.url
         ytId = obj.ytId
         tags = obj.tags
-        updateId = obj.id
+        haveAnId = obj.id
     }
 
     if (url || ytId) {
@@ -28,7 +28,7 @@ export async function submitMusic(name, url, ytId, tags) {
             check = music => music.url === toCreate.url
         }
 
-        if (!updateId) {
+        if (!haveAnId) {
             this.$store.getters['userDB/music'].forEach(music => {
                 if (check(music)) {
                     alreadyExist = music
@@ -44,24 +44,21 @@ export async function submitMusic(name, url, ytId, tags) {
                 type: 'warn',
                 message: alreadyExist.name,
             })
+        } else if (haveAnId) {
+            await this.$http.put(`/music/${haveAnId}`, toCreate)
+            await this.$store.commit('userDB/update_music', { [haveAnId]: toCreate })
+            this.notification({
+                title: 'Music updated',
+                type: 'success',
+            })
         } else {
             const key = (await this.$http.post('/music', toCreate)).data.name
             await this.$store.commit('userDB/add_musics', { [key]: toCreate })
-            if (updateId) {
-                await this.$http.delete('/music/' + updateId)
-                await this.$store.commit('userDB/delete_music', updateId)
-                obj.id = key
-                this.notification({
-                    title: 'Music updated',
-                    type: 'success',
-                })
-            } else {
-                this.notification({
-                    title: 'Music added:',
-                    type: 'success',
-                    message: toCreate.name,
-                })
-            }
+            this.notification({
+                title: 'Music added:',
+                type: 'success',
+                message: toCreate.name,
+            })
         }
     } else {
         console.error("no url or ytId, can't create/update")

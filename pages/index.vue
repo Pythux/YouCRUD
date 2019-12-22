@@ -239,16 +239,6 @@ export default {
             this.isInfo = true
             this.changeMusic()
         },
-        async submitAndgoNextUndefined() {
-            await submitMusic.call(this, this.selected)
-            for (const index in this.$store.getters['userDB/music']) {
-                const music = this.$store.getters['userDB/music'][index]
-                if (music.id === music.name || music.name === '' || music.name === undefined) {
-                    this.selected = music
-                    break
-                }
-            }
-        },
     },
     notifications: {
         deleteNotification: {
