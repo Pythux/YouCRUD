@@ -1,14 +1,14 @@
 <template>
   <v-app dark>
     <v-app-bar fixed app>
-      <nuxt-link to="/create-link">
-        <v-btn icon>
-          <v-icon>mdi-music-note-plus</v-icon>
-        </v-btn>
-      </nuxt-link>
       <nuxt-link to="/">
         <v-btn icon>
           <v-icon>mdi-animation</v-icon>
+        </v-btn>
+      </nuxt-link>
+      <nuxt-link to="/create-link">
+        <v-btn icon>
+          <v-icon>mdi-music-note-plus</v-icon>
         </v-btn>
       </nuxt-link>
       <v-spacer />

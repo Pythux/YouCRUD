@@ -1,7 +1,7 @@
 <template lang="html">
   <v-row>
     <v-col cols="2">
-      <v-btn color="green" @click="newTag = !newTag">
+      <v-btn color="#26C6DA" @click="newTag = !newTag">
         <plus-circle-icon />
       </v-btn>
     </v-col>

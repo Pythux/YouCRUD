@@ -15,4 +15,6 @@ const options = {
     warn: toast,
 }
 
+VueNotifications.config.timeout = 8000
+
 Vue.use(VueNotifications, options)

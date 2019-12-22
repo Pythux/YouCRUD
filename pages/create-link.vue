@@ -37,9 +37,11 @@
             </v-row>
           </v-card-text>
           <v-card-actions>
-            <v-btn type="submit">
-              <save-icon />
-            </v-btn>
+            <v-row justify="center">
+              <v-btn type="submit" color="success">
+                <save-icon />
+              </v-btn>
+            </v-row>
           </v-card-actions>
         </form>
       </v-card>
@@ -122,10 +124,7 @@ export default {
         },
     },
     notifications: {
-        alreadyExist: {
-            title: 'Music already exist',
-            type: 'info',
-        },
+        notification: { },
     },
 }
 </script>

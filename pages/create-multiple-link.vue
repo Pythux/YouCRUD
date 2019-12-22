@@ -105,10 +105,7 @@ export default {
         },
     },
     notifications: {
-        alreadyExist: {
-            title: 'Music already exist',
-            type: 'info',
-        },
+        notification: { },
     },
 }
 </script>

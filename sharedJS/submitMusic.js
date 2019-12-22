@@ -38,10 +38,12 @@ export async function submitMusic(name, url, ytId, tags) {
 
         if (alreadyExist) {
             console.log('alreadyExist')
-            if (this.alreadyExist) {
-                this.alreadyExist({ message: alreadyExist.name })
-            }
             console.log(alreadyExist)
+            this.notification({
+                title: 'Music already exist:',
+                type: 'warn',
+                message: alreadyExist.name,
+            })
         } else {
             const key = (await this.$http.post('/music', toCreate)).data.name
             await this.$store.commit('userDB/add_musics', { [key]: toCreate })
@@ -49,6 +51,16 @@ export async function submitMusic(name, url, ytId, tags) {
                 await this.$http.delete('/music/' + updateId)
                 await this.$store.commit('userDB/delete_music', updateId)
                 obj.id = key
+                this.notification({
+                    title: 'Music updated',
+                    type: 'success',
+                })
+            } else {
+                this.notification({
+                    title: 'Music added:',
+                    type: 'success',
+                    message: toCreate.name,
+                })
             }
         }
     } else {

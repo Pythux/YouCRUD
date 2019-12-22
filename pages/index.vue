@@ -232,9 +232,12 @@ export default {
                 }
             }
         },
-        deleteMusic(elem) {
-            this.$store.dispatch('userDB/deleteMusic', elem.id)
-            this.selected = undefined
+        async deleteMusic(elem) {
+            const name = elem.name
+            await this.$store.dispatch('userDB/deleteMusic', elem.id)
+            this.deleteNotification({ message: name })
+            this.isInfo = true
+            this.changeMusic()
         },
         async submitAndgoNextUndefined() {
             await submitMusic.call(this, this.selected)
@@ -245,6 +248,12 @@ export default {
                     break
                 }
             }
+        },
+    },
+    notifications: {
+        deleteNotification: {
+            type: 'success',
+            title: 'music deleted:',
         },
     },
 }
