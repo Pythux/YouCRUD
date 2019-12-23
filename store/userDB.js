@@ -64,6 +64,9 @@ export default {
     },
     mutations: {
         set_userDB(state, userDB) {
+            Object.keys(userDB.music).forEach(key => {
+                userDB.music[key].tags = userDB.music[key].tags || []
+            })
             state.userDB = userDB
         },
         add_musics(state, musics) {
@@ -84,9 +87,6 @@ export default {
         deleteMusic({ commit }, key) {
             http.delete(`/music/${key}`)
                 .then(() => { commit('delete_music', key) })
-        },
-        setSaveUserDB({ dispatch, commit, state }, userDB) {
-            dispatch('saveUserDB')
         },
         async getUserDB({ commit, dispatch }) {
             const getUserDB = await http.get('/')

@@ -231,6 +231,7 @@ export default {
                     break
                 }
             }
+            this.isInfo = true
         },
         async deleteMusic(elem) {
             const name = elem.name
