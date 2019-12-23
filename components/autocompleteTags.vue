@@ -12,6 +12,7 @@
         :items="existingTags"
         :search-input="currentTag"
         no-data-text="click on the '+' button add a tag"
+        :autofocus="focusAutocomplete"
         outlined
         dense
         chips
@@ -23,7 +24,7 @@
         @update:search-input="updateCurrentTag"
         @keydown.enter.native.prevent="enterAutocomplete()"
       />
-      <v-text-field v-else v-model="tagToAdd" label="new Tag:" @keydown.enter.prevent="addNewTag()" />
+      <v-text-field v-else v-model="tagToAdd" label="new Tag:" autofocus @keydown.enter.prevent="addNewTag()" />
     </v-col>
   </v-row>
 </template>
@@ -40,6 +41,7 @@ export default {
             addedTags: [],
             newTag: false,
             tagToAdd: '',
+            focusAutocomplete: false,
         }
     },
     computed: {
@@ -52,6 +54,9 @@ export default {
             this.selectedTags = value
         },
     },
+    mounted() {
+        this.selectedTags = this.value
+    },
     methods: {
         updateTags(tags) {
             this.selectedTags = tags
@@ -63,6 +68,7 @@ export default {
             this.updateTags(this.selectedTags)
             this.tagToAdd = ''
             this.newTag = false
+            this.focusAutocomplete = true
         },
         updateCurrentTag(tag) {
             this.currentTag = tag

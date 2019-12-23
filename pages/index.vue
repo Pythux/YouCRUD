@@ -241,6 +241,7 @@ export default {
         },
     },
     notifications: {
+        notification: {},
         deleteNotification: {
             type: 'success',
             title: 'music deleted:',

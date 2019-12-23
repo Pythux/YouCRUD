@@ -22,7 +22,7 @@
           </v-card-title>
           <v-card-text>
             <v-text-field v-model="name" label="Name" />
-            <v-text-field v-model="url" label="URL:" :error-messages="errorAlreadyExist" />
+            <v-text-field v-model="url" label="URL:" autofocus :error-messages="errorAlreadyExist" />
             <AutocompleteTags v-model="tags" @submit="submit" />
             <v-row>
               <template v-for="tag in apiTags">
