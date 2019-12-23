@@ -13,8 +13,8 @@
       <v-btn style="margin: 5px;text-transform: none" @click="fusionTags()">
         Fusion/Rename selected tags
       </v-btn>
-      <v-btn style="margin: 5px;text-transform: none" @click="noUndefinedTags()">
-        noUndefinedTags
+      <v-btn style="margin: 5px;text-transform: none" @click="noDoublons()">
+        no Doublons
       </v-btn>
     </v-row>
     <v-row v-if="fusion">
@@ -62,25 +62,29 @@ export default {
             return activeTags
         },
     },
+    notifications: { notification: {} },
     methods: {
         switchActiveTag(tag) {
             this.activTags = Object.assign({}, this.activTags, { [tag]: !this.activTags[tag] })
         },
-        async noUndefinedTags() {
+        async noDoublons() {
             const toCompute = []
             console.log('start')
-            Object.values(this.$store.getters['userDB/music']).forEach(music => {
-                if (music.tags === undefined) {
-                    toCompute.push(music)
+            const liMusic = this.$store.getters['userDB/music']
+            liMusic.forEach((music, index) => {
+                for (let i = index + 1; i < liMusic.length; i++) {
+                    if (music.ytId === liMusic[i].ytId) {
+                        console.log(music, liMusic[i])
+                        toCompute.push(liMusic[i])
+                    }
                 }
             })
             console.log('to compute')
+            console.log(toCompute)
             await Promise.all(toCompute.map(async music => {
-                music.tags = []
-                await submitMusic.call(this, music)
+                await this.$store.dispatch('userDB/deleteMusic', music.id)
             }))
             console.log('done')
-            this.$store.dispatch('userDB/saveUserDB')
         },
         async deleteTags(selection) {
             const toCompute = []
@@ -111,7 +115,6 @@ export default {
             console.log('to compute: ' + toCompute.length)
             await Promise.all(toCompute.map(f => f()))
             console.log('done')
-            this.$store.dispatch('userDB/saveUserDB')
         },
         async nameAndTagAll() {
             const toCompute = []
@@ -140,7 +143,6 @@ export default {
             console.log('launch comput on ' + toCompute.length)
             await Promise.all(toCompute.map(f => f()))
             console.log('end of updates')
-            this.$store.dispatch('userDB/saveUserDB')
         },
         fusionTags() {
             this.fusion = !this.fusion
@@ -164,7 +166,6 @@ export default {
                 await submitMusic.call(this, { ...music, tags: newTags })
             }))
             console.log('end of fusionTags')
-            this.$store.dispatch('userDB/saveUserDB')
             this.fusionLoading = false
             this.fusion = false
             tagToDeletes.forEach(tag => delete this.activTags[tag])
