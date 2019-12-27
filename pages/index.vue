@@ -99,7 +99,7 @@
 
 <script>
 import YtPlayer from '@/components/YtPlayer'
-import AutocompleteTags from '@/components/autocompleteTags'
+import AutocompleteTags from '@/components/AutocompleteTags'
 import { submitMusic } from '@/sharedJS/submitMusic'
 import { getYtId } from '@/sharedJS/ytURL'
 

@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import AutocompleteTags from '@/components/autocompleteTags'
+import AutocompleteTags from '@/components/AutocompleteTags'
 import { submitMusic } from '@/sharedJS/submitMusic'
 import { getYtId } from '@/sharedJS/ytURL'
 
