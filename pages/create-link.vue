@@ -46,17 +46,21 @@
         </form>
       </v-card>
     </v-col>
+    <DataTable @update:row="selectedRow = $event" />
+    {{ selectedRow }}
   </v-row>
 </template>
 
 <script>
 import AutocompleteTags from '@/components/AutocompleteTags'
+import DataTable from '@/components/DataTable'
 import { submitMusic } from '@/sharedJS/submitMusic'
 import { getYtId } from '@/sharedJS/ytURL'
 
 export default {
     components: {
         AutocompleteTags,
+        DataTable,
     },
     data() {
         return {
@@ -66,6 +70,7 @@ export default {
             apiTags: [],
             loading: false,
             errorAlreadyExist: '',
+            selectedRow: undefined,
         }
     },
     computed: {
