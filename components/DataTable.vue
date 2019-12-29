@@ -1,25 +1,35 @@
 <template lang="html">
-  <table>
-    <tr class="headers">
-      <th v-for="(h, i) in headers" :key="i">
-        {{ h.text }}
-      </th>
-    </tr>
-    <tr
-      v-for="(row, index) in liRow"
-      :key="row.id || index"
-      :class="{row_even: index % 2 === 0, row_odd: index % 2 !== 0, selected: row.id === selected}"
-      @click="selectedRow(row)"
-    >
-      <td v-for="(h, i) in headers" :key="i">
-        {{ row[h.value] }}
-      </td>
-    </tr>
-  </table>
+  <v-row>
+    <table>
+      <tr class="headers">
+        <th v-for="(h, i) in headers" :key="i">
+          {{ h.text }}
+        </th>
+      </tr>
+      <tr
+        v-for="(row, index) in liRowDisplayed"
+        :key="row.id || index"
+        :class="{row_odd: true, selected: row.id === selected}"
+        @click="selectRow(row)"
+      >
+        <td v-for="(h, i) in headers" :key="i">
+          {{ row[h.value] }}
+        </td>
+      </tr>
+    </table>
+    <v-pagination v-model="paginInf.pageNb" total-visible="9" circle :length="paginInf.len" :disabled="paginInf.len === 0" />
+  </v-row>
 </template>
 
 <script>
 export default {
+    props: {
+        row: {
+            type: Object,
+            required: false,
+            default: undefined,
+        },
+    },
     data() {
         return {
             headers: [
@@ -31,14 +41,57 @@ export default {
                 { name: 'Laughing Bacchus', tags: ['Canada', 'Yoshi'], id: 2 },
                 { name: 'Helen Bennett', tags: ['UK', 'Austria', 'Mexico'], id: 3 },
                 { name: 'Moctezuma', tags: [], id: 4 },
+                { name: 'Mocte', tags: [], id: 5 },
+                { name: 'Moa', tags: [], id: 6 },
+                { name: 'Mo', tags: [], id: 7 },
             ],
             selected: undefined,
+            // pageNb: 1,
+            paginInf: {
+                pageNb: 1,
+                len: 0,
+                rowPerPage: 5,
+            },
         }
     },
+    computed: {
+        liRowDisplayed() {
+            if (this.paginInf.len !== 0) {
+                const indexStart = (this.paginInf.pageNb - 1) * this.paginInf.rowPerPage
+                const indexEnd = indexStart + this.paginInf.rowPerPage
+                return [...this.liRow.slice(indexStart, indexEnd)]
+            }
+            return this.liRow
+        },
+    },
+    watch: {
+        row(updateRow) {
+            this.changeSelectedRow(updateRow)
+        },
+        liRow() {
+            this.paginInf.len = Math.ceil(this.liRow.length / this.paginInf.rowPerPage)
+            if (this.paginInf.len === 1) {
+                this.paginInf.len = 0
+            }
+        },
+    },
+    mounted() {
+        if (this.row !== undefined) {
+            this.changeSelectedRow(this.row)
+        }
+        this.liRow = [...this.liRow]
+    },
     methods: {
-        selectedRow(row) {
-            this.selected = row.id
+        selectRow(row) {
+            this.changeSelectedRow(row)
             this.$emit('update:row', row)
+        },
+        changeSelectedRow(row) {
+            if (row.id === undefined) {
+                console.error('the row object given must have an "id" key')
+            } else {
+                this.selected = row.id
+            }
         },
     },
 }
@@ -51,6 +104,7 @@ export default {
 .row_odd, .headers {
     background-color: #616161;
 }
+
 .row_even:hover, .row_odd:hover {
     background-color: #BDBDBD;
 }
