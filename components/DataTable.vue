@@ -9,7 +9,7 @@
       <tr
         v-for="(rowDisplayed, index) in liRowDisplayed"
         :key="rowDisplayed.id || index"
-        :class="{row_odd: true, selected: rowDisplayed.id === selected}"
+        :class="{row_odd: index % 2, row_even: !(index % 2), selected: rowDisplayed.id === selected}"
         @click="selectRow(rowDisplayed)"
       >
         <td v-for="(h, i) in headers" :key="i">
@@ -111,10 +111,10 @@ export default {
 
 <style lang="css" scoped>
 .row_even {
-    background-color: #424242;
+    background-color: white;
 }
 .row_odd, .headers {
-    /* background-color: #F9FBE7; */
+    background-color: #F9FBE7;
 }
 
 .row_even:hover, .row_odd:hover {
