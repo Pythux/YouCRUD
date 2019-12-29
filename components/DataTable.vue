@@ -93,6 +93,12 @@ export default {
             if (this.paginInf.len === 1) {
                 this.paginInf.len = 0
             }
+            if (this.paginInf.pageNb > this.paginInf.len) {
+                this.paginInf.pageNb = this.paginInf.len
+            }
+            if (this.paginInf.pageNb === 0) {
+                this.paginInf.pageNb = 1
+            }
         },
     },
 }
