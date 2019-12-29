@@ -7,10 +7,10 @@
         </th>
       </tr>
       <tr
-        v-for="(row, index) in liRowDisplayed"
-        :key="row.id || index"
-        :class="{row_odd: true, selected: row.id === selected}"
-        @click="selectRow(row)"
+        v-for="(rowDisplayed, index) in liRowDisplayed"
+        :key="rowDisplayed.id || index"
+        :class="{row_odd: true, selected: rowDisplayed.id === selected}"
+        @click="selectRow(rowDisplayed)"
       >
         <td v-for="(h, i) in headers" :key="i">
           {{ row[h.value] }}
@@ -102,14 +102,14 @@ export default {
     background-color: #424242;
 }
 .row_odd, .headers {
-    background-color: #616161;
+    /* background-color: #F9FBE7; */
 }
 
 .row_even:hover, .row_odd:hover {
-    background-color: #BDBDBD;
+    background-color: #C8E6C9;
 }
 .selected {
-    background-color: #212121;
+    background-color: #81C784;
 }
 table {
   font-family: arial, sans-serif;
@@ -118,7 +118,7 @@ table {
 }
 
 td, th {
-  border: 1px solid #424242;
+  border: 1px solid #BDBDBD;
   text-align: left;
   padding: 8px;
 }
