@@ -46,14 +46,11 @@
         </form>
       </v-card>
     </v-col>
-    <DataTable :row.sync="selectedRow" />
-    {{ selectedRow }}
   </v-row>
 </template>
 
 <script>
 import AutocompleteTags from '@/components/AutocompleteTags'
-import DataTable from '@/components/DataTable'
 import { submitMusic } from '@/sharedJS/submitMusic'
 import { getYtId } from '@/sharedJS/ytURL'
 

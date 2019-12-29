@@ -83,16 +83,7 @@
         single-line
         hide-details
       />
-      <v-data-table
-        style="cursor: pointer;"
-        :headers="headers"
-        disable-sort
-        :search="search"
-        :items="musicItems"
-        :items-per-page="15"
-        class="elevation-2"
-        @click:row="click"
-      />
+      <DataTable class="elevation-2" :row.sync="selected" :headers="headers" :items="musicItems" :items-per-page="15" />
     </v-col>
   </v-row>
 </template>
@@ -100,22 +91,20 @@
 <script>
 import YtPlayer from '@/components/YtPlayer'
 import AutocompleteTags from '@/components/AutocompleteTags'
+import DataTable from '@/components/DataTable'
 import { submitMusic } from '@/sharedJS/submitMusic'
 import { getYtId } from '@/sharedJS/ytURL'
 
 export default {
     components: {
-        AutocompleteTags,
         YtPlayer,
+        AutocompleteTags,
+        DataTable,
     },
     data() {
         return {
             headers: [
-                {
-                    text: 'Name',
-                    align: 'left',
-                    value: 'name',
-                },
+                { text: 'Name', value: 'name' },
                 { text: 'Tags', value: 'tags' },
             ],
             search: '',
@@ -182,6 +171,7 @@ export default {
             if (this.liPrevMusic.length > 20) {
                 this.liPrevMusic.splice(0, 5)
             }
+            window.scroll({ top: 0, behavior: 'smooth' })
         },
     },
     mounted() {
@@ -190,17 +180,6 @@ export default {
     methods: {
         switchActiveTag(tag) {
             this.activTags = Object.assign({}, this.activTags, { [tag]: !this.activTags[tag] })
-        },
-        click(obj) {
-            const newObj = { ...obj }
-            if (!newObj.tags) {
-                newObj.tags = []
-            }
-            if (!newObj.name) {
-                newObj.name = ''
-            }
-            this.selected = newObj
-            window.scroll({ top: 0, behavior: 'smooth' })
         },
         changeMusic() {
             function getRandomInt(max) {

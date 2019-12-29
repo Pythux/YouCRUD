@@ -29,57 +29,52 @@ export default {
             required: false,
             default: undefined,
         },
+        itemsPerPage: {
+            type: Number,
+            required: false,
+            default: 5,
+        },
+        headers: {
+            type: Array,
+            required: true,
+        },
+        items: {
+            type: Array,
+            required: true,
+        },
     },
     data() {
         return {
-            headers: [
-                { text: 'Name', value: 'name' },
-                { text: 'Tags', value: 'tags' },
-            ],
-            liRow: [
-                { name: 'Giovanni Rovelli', tags: ['Italy'], id: 1 },
-                { name: 'Laughing Bacchus', tags: ['Canada', 'Yoshi'], id: 2 },
-                { name: 'Helen Bennett', tags: ['UK', 'Austria', 'Mexico'], id: 3 },
-                { name: 'Moctezuma', tags: [], id: 4 },
-                { name: 'Mocte', tags: [], id: 5 },
-                { name: 'Moa', tags: [], id: 6 },
-                { name: 'Mo', tags: [], id: 7 },
-            ],
             selected: undefined,
-            // pageNb: 1,
             paginInf: {
                 pageNb: 1,
                 len: 0,
-                rowPerPage: 5,
             },
         }
     },
     computed: {
         liRowDisplayed() {
             if (this.paginInf.len !== 0) {
-                const indexStart = (this.paginInf.pageNb - 1) * this.paginInf.rowPerPage
-                const indexEnd = indexStart + this.paginInf.rowPerPage
-                return [...this.liRow.slice(indexStart, indexEnd)]
+                const indexStart = (this.paginInf.pageNb - 1) * this.itemsPerPage
+                const indexEnd = indexStart + this.itemsPerPage
+                return [...this.items.slice(indexStart, indexEnd)]
             }
-            return this.liRow
+            return this.items
         },
     },
     watch: {
         row(updateRow) {
             this.changeSelectedRow(updateRow)
         },
-        liRow() {
-            this.paginInf.len = Math.ceil(this.liRow.length / this.paginInf.rowPerPage)
-            if (this.paginInf.len === 1) {
-                this.paginInf.len = 0
-            }
+        items() {
+            this.checkChangeItemsLength()
         },
     },
     mounted() {
-        if (this.row !== undefined) {
+        this.checkChangeItemsLength()
+        if (this.row) {
             this.changeSelectedRow(this.row)
         }
-        this.liRow = [...this.liRow]
     },
     methods: {
         selectRow(row) {
@@ -91,6 +86,12 @@ export default {
                 console.error('the row object given must have an "id" key')
             } else {
                 this.selected = row.id
+            }
+        },
+        checkChangeItemsLength() {
+            this.paginInf.len = Math.ceil(this.items.length / this.itemsPerPage)
+            if (this.paginInf.len === 1) {
+                this.paginInf.len = 0
             }
         },
     },
@@ -107,6 +108,7 @@ export default {
 
 .row_even:hover, .row_odd:hover {
     background-color: #C8E6C9;
+    cursor: pointer;
 }
 .selected {
     background-color: #81C784;
