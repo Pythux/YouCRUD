@@ -63,8 +63,9 @@
       <template v-for="tag in $store.getters['userDB/tags']">
         <v-chip
           :key="tag"
+          color="light-green darken-3"
           :outlined="!activTags[tag]"
-          style="margin: 5px"
+          style="margin: 5px; color: white;"
           @click="switchActiveTag(tag)"
         >
           {{ tag }} ({{ $store.getters['userDB/occurencesOfTags'][tag] }})

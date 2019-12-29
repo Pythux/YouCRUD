@@ -113,19 +113,23 @@ export default {
 .row_even {
     background-color: white;
 }
-.row_odd, .headers {
-    background-color: #F9FBE7;
+.headers {
+    background-color: #9CCC65;
+}
+.row_odd {
+    background-color: #DCEDC8;
 }
 
 .row_even:hover, .row_odd:hover {
-    background-color: #C8E6C9;
+    background-color: #558B2F;
     cursor: pointer;
+    color: white;
 }
 .selected {
-    background-color: #81C784;
+    background-color: #689F38;
+    color: white;
 }
 table {
-  font-family: arial, sans-serif;
   border-collapse: collapse;
   width: 100%;
 }
