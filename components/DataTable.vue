@@ -13,7 +13,7 @@
         @click="selectRow(rowDisplayed)"
       >
         <td v-for="(h, i) in headers" :key="i">
-          {{ rowDisplayed[h.value] }}
+          {{ rowDisplayed[h.value] | arrayDisplay }}
         </td>
       </tr>
     </table>
@@ -23,6 +23,11 @@
 
 <script>
 export default {
+    filters: {
+        arrayDisplay(value) {
+            return Array.isArray(value) ? value.join(', ') : value
+        },
+    },
     props: {
         row: {
             type: Object,

@@ -72,10 +72,6 @@
       </template>
     </v-row>
     <v-col cols="12">
-      <v-switch
-        v-model="filterOnDone"
-        label="ToDo"
-      />
       <v-text-field
         v-model="search"
         append-icon="mdi-magnify"
@@ -113,7 +109,6 @@ export default {
             arrayActionTxt: { true: 'Info', false: 'Update' },
             activTags: {},
             liPrevMusic: [],
-            filterOnDone: false,
         }
     },
     computed: {
@@ -144,21 +139,20 @@ export default {
         },
         musicItems() {
             const liActivTags = Object.keys(this.activTags).filter(tag => this.activTags[tag])
+            let checkSearch = () => true
+            if (this.search !== '') {
+                const search = this.search.toLowerCase()
+                checkSearch = music => music.name.toLowerCase().includes(search)
+            }
             if (liActivTags.length === 0) {
                 return this.$store.getters['userDB/music'].filter(music => {
-                    if (this.filterOnDone) {
-                        return !music.done
-                    }
-                    return true
+                    return checkSearch(music)
                 })
             }
             return this.$store.getters['userDB/music'].filter(music => {
                 for (const tagIndex in music.tags) {
                     if (liActivTags.includes(music.tags[tagIndex])) {
-                        if (this.filterOnDone) {
-                            return !music.done
-                        }
-                        return true
+                        return checkSearch(music)
                     }
                 }
                 return false
