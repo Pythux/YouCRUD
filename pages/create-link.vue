@@ -46,7 +46,7 @@
         </form>
       </v-card>
     </v-col>
-    <DataTable :row="selectedRow" @update:row="selectedRow = $event" />
+    <DataTable :row.sync="selectedRow" />
     {{ selectedRow }}
   </v-row>
 </template>
