@@ -13,7 +13,7 @@
         @click="selectRow(rowDisplayed)"
       >
         <td v-for="(h, i) in headers" :key="i">
-          {{ row[h.value] }}
+          {{ rowDisplayed[h.value] }}
         </td>
       </tr>
     </table>
