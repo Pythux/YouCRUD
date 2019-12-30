@@ -57,7 +57,6 @@ import { getYtId } from '@/sharedJS/ytURL'
 export default {
     components: {
         AutocompleteTags,
-        DataTable,
     },
     data() {
         return {
