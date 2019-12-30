@@ -5,7 +5,7 @@
 this project allow a user to save name and tag of his youtube music.
 He could then play them randomly from a filtered list of his choice.
 
-You could test it on the login screen with the **"test account"**
+You could test it on the login screen with email: test@test.com, password: 123456
 
 
 This project use [firebase](https://firebase.google.com/) for the JSON database and hosting

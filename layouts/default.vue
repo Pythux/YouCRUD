@@ -30,6 +30,9 @@
           <v-list-item @click="$router.push('/tags')">
             <v-list-item-title>Tags managements</v-list-item-title>
           </v-list-item>
+          <v-list-item @click="logout()">
+            <v-list-item-title>Logout</v-list-item-title>
+          </v-list-item>
         </v-list>
       </v-menu>
     </v-app-bar>
@@ -59,6 +62,10 @@ export default {
             dlAnchorElem.setAttribute('href', dataStr)
             dlAnchorElem.setAttribute('download', 'userDB.json')
             dlAnchorElem.click()
+        },
+        logout() {
+            this.$store.dispatch('auth/logout')
+            this.$router.push('/login')
         },
         // addBandsTag() {  // to use for bands sorting
         //     Object.values(this.$store.getters['userDB/music']).forEach(music => {

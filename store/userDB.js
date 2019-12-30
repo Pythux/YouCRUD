@@ -89,8 +89,12 @@ export default {
                 .then(() => { commit('delete_music', key) })
         },
         async getUserDB({ commit, dispatch }) {
-            const getUserDB = await http.get('/')
-            await commit('set_userDB', getUserDB.data)
+            let userDB = (await http.get('/')).data
+            if (userDB === null) {
+                userDB = { music: {} }
+                // await http.put('/', userDB)
+            }
+            await commit('set_userDB', userDB)
         },
     },
 }
