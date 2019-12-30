@@ -25,9 +25,9 @@
         </v-toolbar>
         <v-card-text>
           <v-form v-if="!isInfo" @submit.prevent="submit">
-            <v-text-field v-model="selected.name" label="Name" />
+            <v-text-field v-model="selectedMutable.name" label="Name" />
             <v-text-field v-model="selectedURL" label="URL:" />
-            <AutocompleteTags v-model="selected.tags" @submit="submit" />
+            <AutocompleteTags v-model="selectedMutable.tags" @submit="submit" />
             <v-card-actions>
               <v-btn color="red darken-3" style="text-transform: none" @click="deleteMusic(selected)">
                 Delete
@@ -109,6 +109,7 @@ export default {
             ],
             search: '',
             selected: null,
+            selectedMutable: null,
             isInfo: true,
             arrayActionTxt: { true: 'Info', false: 'Update' },
             activTags: {},
@@ -124,20 +125,20 @@ export default {
         },
         selectedURL: {
             get() {
-                if (this.selected.ytId) {
-                    return `https://www.youtube.com/watch?v=${this.selected.ytId}`
+                if (this.selectedMutable.ytId) {
+                    return `https://www.youtube.com/watch?v=${this.selectedMutable.ytId}`
                 }
-                return this.selected.url
+                return this.selectedMutable.url
             },
             set(newURL) {
                 const ytId = getYtId(newURL)
                 console.log('ytid:', ytId)
                 if (ytId) {
-                    delete this.selected.url
-                    this.selected.ytId = ytId
+                    delete this.selectedMutable.url
+                    this.selectedMutable.ytId = ytId
                 } else {
-                    delete this.selected.ytId
-                    this.selected.url = newURL
+                    delete this.selectedMutable.ytId
+                    this.selectedMutable.url = newURL
                 }
             },
         },
@@ -170,6 +171,8 @@ export default {
                 this.liPrevMusic.splice(0, 5)
             }
             window.scroll({ top: 0, behavior: 'smooth' })
+            this.selectedMutable = { ...this.selected }
+            this.selectedMutable.tags = this.selected.tags ? [...this.selected.tags] : []
         },
     },
     mounted() {
@@ -209,11 +212,11 @@ export default {
             }
         },
         async submit() {
-            if (!(this.selected.tags && this.selected.tags.length > 0)) {
+            if (!(this.selectedMutable.tags && this.selectedMutable.tags.length > 0)) {
                 alert('no tags')
                 return
             }
-            await submitMusic.call(this, this.selected)
+            await submitMusic.call(this, this.selectedMutable)
             this.isInfo = true
         },
         async deleteMusic(elem) {
