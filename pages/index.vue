@@ -53,6 +53,9 @@
         <v-btn style="margin: 5px" @click="previousMusic()">
           Previous
         </v-btn>
+        <v-btn style="margin: 5px" @click="nextMusic()">
+          Next
+        </v-btn>
         <v-btn style="margin: 5px" @click="changeMusic()">
           Play next random
         </v-btn>
@@ -192,19 +195,27 @@ export default {
             this.selected = this.liPrevMusic.pop()
             this.liPrevMusic.pop()
         },
+        nextMusic() {
+            for (const musicIndex in this.musicItems) {
+                console.log(musicIndex)
+                if (this.musicItems[musicIndex].id === this.selected.id) {
+                    const nextIndex = +musicIndex + 1
+                    console.log('found:', musicIndex, nextIndex)
+                    if (nextIndex === this.musicItems.length) {
+                        this.selected = this.musicItems[0]
+                    } else {
+                        this.selected = this.musicItems[nextIndex]
+                    }
+                    break
+                }
+            }
+        },
         async submit() {
             if (!(this.selected.tags && this.selected.tags.length > 0)) {
                 alert('no tags')
                 return
             }
             await submitMusic.call(this, this.selected)
-            for (const index in this.$store.getters['userDB/music']) {
-                const music = this.$store.getters['userDB/music'][index]
-                if (music.done === undefined) {
-                    this.selected = music
-                    break
-                }
-            }
             this.isInfo = true
         },
         async deleteMusic(elem) {
