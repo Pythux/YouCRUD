@@ -197,10 +197,8 @@ export default {
         },
         nextMusic() {
             for (const musicIndex in this.musicItems) {
-                console.log(musicIndex)
                 if (this.musicItems[musicIndex].id === this.selected.id) {
                     const nextIndex = +musicIndex + 1
-                    console.log('found:', musicIndex, nextIndex)
                     if (nextIndex === this.musicItems.length) {
                         this.selected = this.musicItems[0]
                     } else {
