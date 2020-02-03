@@ -69,6 +69,9 @@ export default {
             })
             state.userDB = userDB
         },
+        free_userDB(state) {
+            state.userDB = null
+        },
         add_musics(state, musics) {
             console.log('add: ', musics)
             state.userDB.music = Object.assign({}, state.userDB.music, musics)

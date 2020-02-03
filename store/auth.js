@@ -16,7 +16,7 @@ export default {
             return undefined
         },
         jwtIdToken: state => {
-            return JSON.parse(atob(state.idToken.split('.')[1]))
+            return state.idToken ? JSON.parse(atob(state.idToken.split('.')[1])) : undefined
         },
     },
     mutations: {
