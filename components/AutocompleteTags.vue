@@ -1,11 +1,6 @@
 <template lang="html">
   <v-row>
-    <v-col cols="2">
-      <v-btn color="#26C6DA" @click="newTag = !newTag">
-        <plus-circle-icon />
-      </v-btn>
-    </v-col>
-    <v-col cols="10">
+    <v-col sm="9" cols="12">
       <v-autocomplete
         v-if="!newTag"
         :value="selectedTags"
@@ -25,6 +20,11 @@
         @keydown.enter.native.prevent="enterAutocomplete()"
       />
       <v-text-field v-else v-model="tagToAdd" label="new Tag:" autofocus @keydown.enter.prevent="addNewTag()" />
+    </v-col>
+    <v-col cols="5" sm="3">
+      <v-btn color="#9ffff6" @click="newTag = !newTag">
+        New Tag
+      </v-btn>
     </v-col>
   </v-row>
 </template>

@@ -1,5 +1,5 @@
 <template lang="html">
-  <v-row justify="center" class="yolo">
+  <v-row justify="center">
     <v-row v-if="ytId" justify="center">
       <iframe
         type="text/html"
