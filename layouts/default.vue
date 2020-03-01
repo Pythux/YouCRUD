@@ -1,6 +1,6 @@
 <template>
   <v-app dark>
-    <v-app-bar fixed app>
+    <v-app-bar v-if="$store.getters['auth/userName']" fixed app>
       <nuxt-link to="/">
         <v-btn icon>
           <v-icon>mdi-animation</v-icon>
@@ -17,7 +17,7 @@
       </nuxt-link>
       <v-spacer />
       <a id="downloadAnchorElem" style="display:none" />
-      <v-menu offset-y>
+      <v-menu v-if="$store.getters['auth/userName']" offset-y>
         <template v-slot:activator="{ on }">
           <v-btn color="primary" dark v-on="on">
             {{ $store.getters['auth/userName'] }}
