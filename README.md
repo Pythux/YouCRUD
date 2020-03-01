@@ -5,7 +5,7 @@
 this project allow a user to save name and tag of his youtube music.
 He could then play them randomly from a filtered list of his choice.
 
-You could test it on the login screen with email: test@test.com, password: 123456
+You could test it on the login screen with email: `test@test.com`, password: `123456`
 
 
 This project use [firebase](https://firebase.google.com/) for the JSON database and hosting
@@ -31,3 +31,8 @@ $ yarn generate
 ```
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+
+
+# ToDo:
+
+search in youtube, display a list to selecte / modify and add in group
