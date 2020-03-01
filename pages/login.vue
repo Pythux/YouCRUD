@@ -9,10 +9,5 @@ export default {
     components: {
         LoginSignInHTTP,
     },
-    data() {
-        return {
-            yo: 'lo',
-        }
-    },
 }
 </script>
