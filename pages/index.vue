@@ -53,9 +53,6 @@
         <v-btn style="margin: 5px" @click="previousMusic()">
           Previous
         </v-btn>
-        <v-btn style="margin: 5px" @click="nextMusic()">
-          Next
-        </v-btn>
         <v-btn style="margin: 5px" @click="changeMusic()">
           Play next random
         </v-btn>
@@ -195,21 +192,10 @@ export default {
             }
         },
         previousMusic() {
+            console.log(this.liPrevMusic)
             this.selected = this.liPrevMusic.pop()
             this.liPrevMusic.pop()
-        },
-        nextMusic() {
-            for (const musicIndex in this.musicItems) {
-                if (this.musicItems[musicIndex].id === this.selected.id) {
-                    const nextIndex = +musicIndex + 1
-                    if (nextIndex === this.musicItems.length) {
-                        this.selected = this.musicItems[0]
-                    } else {
-                        this.selected = this.musicItems[nextIndex]
-                    }
-                    break
-                }
-            }
+            console.log(this.liPrevMusic)
         },
         async submit() {
             if (!(this.selectedMutable.tags && this.selectedMutable.tags.length > 0)) {
