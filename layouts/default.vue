@@ -91,4 +91,8 @@ export default {
     text-decoration: inherit;
     color: inherit !important;
 }
+
+.mini-toastr {
+top: 74px !important;
+}
 </style>
