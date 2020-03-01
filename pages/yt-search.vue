@@ -9,7 +9,7 @@
       </v-col>
     </v-row>
     <v-col align="center">
-      <v-btn v-if="!doGloableSubmit && searchData.length > 0" color="success" @click="doGloableSubmit = true">
+      <v-btn v-if="!doGloableSubmit && searchData.length > 0" color="success" style="text-transform: none" @click="doGloableSubmit = true">
         add all selected
       </v-btn>
     </v-col>

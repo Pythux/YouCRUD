@@ -16,8 +16,16 @@
           <v-card-title>
             Save a link:
             <v-spacer />
+            <nuxt-link to="/yt-search">
+              <v-btn color="primary" style="text-transform: none">
+                YouTube Search
+              </v-btn>
+            </nuxt-link>
+            <v-spacer />
             <nuxt-link to="/create-multiple-link">
-              <v-btn>add multiple links ?</v-btn>
+              <v-btn style="text-transform: none">
+                add multiple links ?
+              </v-btn>
             </nuxt-link>
           </v-card-title>
           <v-card-text>

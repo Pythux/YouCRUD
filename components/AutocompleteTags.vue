@@ -6,7 +6,7 @@
         :value="selectedTags"
         :items="existingTags"
         :search-input="currentTag"
-        no-data-text="click on the '+' button add a tag"
+        no-data-text="click on the 'New Tag' button add a tag"
         :autofocus="focusAutocomplete"
         outlined
         dense
@@ -22,7 +22,7 @@
       <v-text-field v-else v-model="tagToAdd" label="new Tag:" autofocus @keydown.enter.prevent="addNewTag()" />
     </v-col>
     <v-col cols="5" sm="3">
-      <v-btn color="#9ffff6" @click="newTag = !newTag">
+      <v-btn color="#9ffff6" style="text-transform: none" @click="newTag = !newTag">
         New Tag
       </v-btn>
     </v-col>
