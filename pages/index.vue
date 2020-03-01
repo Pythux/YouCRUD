@@ -50,7 +50,7 @@
     </v-col>
     <v-col cols="12">
       <v-row justify="center">
-        <v-btn style="margin: 5px" @click="previousMusic()">
+        <v-btn style="margin: 5px" :disabled="!liPrevMusic.length" @click="previousMusic()">
           Previous
         </v-btn>
         <v-btn style="margin: 5px" @click="changeMusic()">
@@ -162,14 +162,30 @@ export default {
         },
     },
     watch: {
-        selected(_, oldSelected) {
-            this.liPrevMusic.push(oldSelected)
+        selected(selected, oldSelected) {
+            if (selected === 'previous') {
+                if (this.liPrevMusic.length >= 1) {
+                    this.selected = this.liPrevMusic.pop()
+                } else {
+                    this.notification({
+                        title: 'No previous music',
+                        type: 'warn',
+                    })
+                    this.selected = oldSelected
+                }
+            }
+
+            if (oldSelected !== 'previous' && oldSelected !== null && selected !== 'previous') {
+                this.liPrevMusic.push(oldSelected)
+            }
             if (this.liPrevMusic.length > 20) {
                 this.liPrevMusic.splice(0, 5)
             }
-            window.scroll({ top: 0, behavior: 'smooth' })
-            this.selectedMutable = { ...this.selected }
-            this.selectedMutable.tags = this.selected.tags ? [...this.selected.tags] : []
+            if (selected !== 'previous' && selected !== null) {
+                window.scroll({ top: 0, behavior: 'smooth' })
+                this.selectedMutable = { ...selected }
+                this.selectedMutable.tags = selected.tags ? [...selected.tags] : []
+            }
         },
     },
     mounted() {
@@ -192,10 +208,7 @@ export default {
             }
         },
         previousMusic() {
-            console.log(this.liPrevMusic)
-            this.selected = this.liPrevMusic.pop()
-            this.liPrevMusic.pop()
-            console.log(this.liPrevMusic)
+            this.selected = 'previous'
         },
         async submit() {
             if (!(this.selectedMutable.tags && this.selectedMutable.tags.length > 0)) {
