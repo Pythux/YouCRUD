@@ -8,6 +8,7 @@
         "dev": "nuxt -p 8080 --spa",
         "start": "nuxt -p 8080 --spa",
         "build": "nuxt build",
+        "deploy": "nuxt build && firebase deploy",
         "start_": "nuxt start",
         "generate": "nuxt generate",
         "lint": "NODE_ENV=production eslint --ext .js,.vue --ignore-path ~/.gitignore_global .",
