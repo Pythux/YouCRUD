@@ -9,6 +9,7 @@
               :color="btnColor"
               elevation="0"
               style="height:100%;width:100%;min-width:40px;border-radius:5px 0 0 5px;"
+              :disabled="alreadyExist"
               @click="clickBtn"
             >
               <plus-circle-icon v-if="!toSave" />
@@ -19,15 +20,15 @@
             <img
               :src="img"
               alt="music image"
-              style="display: block;width:100%;height:auto;max-width:320px;max-height: 180px;"
+              style="display:block;width:100%;height:auto;max-width:320px;max-height: 180px;border-radius:0 5px 5px 0;"
             >
           </v-col>
         </v-row>
       </v-col>
       <v-col>
         <div>
-          <v-text-field v-model="name" label="Name" />
-          <AutocompleteTags v-model="tags" @submit="submit" />
+          <v-text-field v-model="title" label="Name" />
+          <AutocompleteTags v-model="tags" />
         </div>
         <v-spacer />
       </v-col>
@@ -37,7 +38,7 @@
 
 <script>
 import AutocompleteTags from '@/components/AutocompleteTags'
-// import { submitMusic } from '@/sharedJS/submitMusic'
+import { submitMusic } from '@/sharedJS/submitMusic'
 
 export default {
     components: {
@@ -48,10 +49,14 @@ export default {
             type: Object,
             required: true,
         },
+        submit: {
+            type: Boolean,
+            required: true,
+        },
     },
     data() {
         return {
-            name: this.decode(this.item.snippet.title),
+            title: this.decode(this.item.snippet.title),
             tags: [],
             toSave: false,
             loading: false,
@@ -64,20 +69,26 @@ export default {
         img() {
             return this.item.snippet.thumbnails.medium.url
         },
+        alreadyExist() {
+            const check = music => music.ytId === this.ytId
+            return this.$store.getters['userDB/music'].filter(check).length === 1
+        },
+        ytId() {
+            return this.item.id.videoId
+        },
+    },
+    watch: {
+        async submit() {
+            if (this.submit && this.toSave) {
+                this.loading = true
+                await submitMusic.call(this, this.title, undefined, this.ytId, this.tags)
+            }
+            this.$emit('done', this.ytId)
+        },
     },
     methods: {
         clickBtn() {
             this.toSave = !this.toSave
-        },
-        submit() {
-            if (this.toSave) {
-                this.loading = true
-                // await submitMusic.call(this, this.name, this.url, this.ytId, this.tags)
-                this.loading = false
-                console.log('save: ', this.title)
-            } else {
-                console.log("don't save: ", this.title)
-            }
         },
         decode(str) {
             str = str.replace(/&#(\d+);/g, function(match, dec) {
@@ -95,6 +106,9 @@ export default {
             const repl = function(c) { return MAP[c] }
             return str.replace(/(&\w+;)/g, repl)
         },
+    },
+    notifications: {
+        notification: { },
     },
 }
 </script>
