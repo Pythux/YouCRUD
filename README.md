@@ -31,8 +31,3 @@ $ yarn generate
 ```
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
-
-
-# ToDo:
-
-search in youtube, display a list to selecte / modify and add in group
